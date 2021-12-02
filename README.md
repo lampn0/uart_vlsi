@@ -1,2 +1,2 @@
-# uart_vlsi
+# UART
 uart_vlsi
