@@ -5,7 +5,7 @@
 //    Copyright Notification
 //    No part may be reproduced except as authorized by written permission.
 //
-//    Module: uart_protocol.uart_protocol.sv
+//    Module: uart_protocol.uart_fifo.sv
 //    Company: Dolphin Technology
 //    Author: lampn0
 //    Date: 15:14:49 12/03/21
@@ -30,20 +30,17 @@ logic [ADDR_WIDTH - 1 : 0] ptr_rd;
 logic [ADDR_WIDTH - 1 : 0] ptr_wr;
 
 always_comb begin : proc_
-  if(write & ~full) begin
-    fifo[ptr_wr] = data_in;
-  end
-  else if(read & ~empty) begin
-    data_out = fifo[ptr_rd];
-  end
-end
-
-
-
-always_comb begin : proc_
   if(reset_n) begin
     for (int i = 0; i < SIZE; i++) begin
       fifo[i] = 0;
+    end
+  end
+  else begin
+    if(write & ~full) begin
+      fifo[ptr_wr] = data_in;
+    end
+    else if(read & ~empty) begin
+      data_out = fifo[ptr_rd];
     end
   end
 end
