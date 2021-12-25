@@ -70,4 +70,40 @@ uart_fifo_transmitter(
   .data_out(data_out)
   );
 
+// -------------------------------------------------------------
+// Counter
+// -------------------------------------------------------------
+always_ff @(posedge clk or negedge reset_n) begin : proc_counter
+  if(~reset_n) begin
+    bit_count <= 0;
+  end
+  else if(shift) begin
+    bit_count <= bit_count + 1'b1;
+  end
+  else if (clear) begin
+    bit_count <= 0;
+  end
+  else begin
+    bit_count <= bit_count;
+  end
+end
+
+// -------------------------------------------------------------
+// TX Shift Register
+// -------------------------------------------------------------
+always_ff @(posedge clk or negedge reset_n) begin : proc_tx_shift_reg
+  if(~reset_n) begin
+    TX_shift_reg <= 0;
+  end
+  else if(load_TX_shift_reg) begin
+    TX_shift_reg <= {data_out,1'b0};
+  end
+  else if (shift) begin
+    TX_shift_reg <= {1'b1,TX_shift_reg[DATA_SIZE:1]};
+  end
+  else begin
+    TX_shift_reg <= TX_shift_reg;
+  end
+end
+
 endmodule : uart_transmitter
