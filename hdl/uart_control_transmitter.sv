@@ -21,6 +21,7 @@ module uart_control_transmitter (
   output  logic write             ,
   output  logic shift             ,
   output  logic clear             ,
+  output  logic serial_data_out   ,
   output  logic error_write_data  
 );
 
