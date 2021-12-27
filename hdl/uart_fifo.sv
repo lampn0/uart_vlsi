@@ -11,63 +11,65 @@
 //    Date: 15:14:49 12/03/21
 //-----------------------------------------------------------------------------------------------------------
 module uart_fifo #(
-  parameter SIZE        = 8,
-  parameter ADDR_WIDTH  = $clog2(SIZE)
+  parameter DATA_SIZE   = 8,
+            SIZE_FIFO   = 8,
+            ADDR_WIDTH  = $clog2(SIZE_FIFO)
   )  (
-  input               clk       ,  // Clock
-  input               reset_n   ,  // Asynchronous reset active low
-  input         [7:0] data_in   ,
-  input               write     ,
-  input               read      ,
-  output logic  [7:0] data_out  ,
-  output logic        full      ,
-  output logic        empty     ,
-  output logic        error     
+  input                             clk       , // Clock
+  input                             reset_n   , // Asynchronous reset active low
+  input         [DATA_SIZE - 1 : 0] data_in   ,
+  input                             write     ,
+  input                             read      ,
+  output logic  [DATA_SIZE - 1 : 0] data_out  ,
+  output logic                      full      ,
+  output logic                      empty     
 );
 
-logic [7:0] fifo [SIZE - 1 : 0];
+// -------------------------------------------------------------
+// Signal Declaration
+// -------------------------------------------------------------
+logic [DATA_SIZE  - 1 : 0] fifo [SIZE_FIFO : 0];
 logic [ADDR_WIDTH - 1 : 0] ptr_rd;
 logic [ADDR_WIDTH - 1 : 0] ptr_wr;
 
-always_comb begin : proc_
+// -------------------------------------------------------------
+// FIFO Data Buffer
+// -------------------------------------------------------------
+always_comb begin : proc_fifo_data
   if(reset_n) begin
-    for (int i = 0; i < SIZE; i++) begin
+    for (int i = 0; i < SIZE_FIFO; i++) begin
       fifo[i] = 0;
     end
   end
   else begin
-    if(write & ~full) begin
+    if(read & write) begin
       fifo[ptr_wr] = data_in;
-    end
-    else if(read & ~empty) begin
       data_out = fifo[ptr_rd];
+    end
+    else if(read & ~write) begin
+      data_out = fifo[ptr_rd];
+    end
+    else if(write & ~read) begin
+      fifo[ptr_wr] = data_in;
     end
   end
 end
 
+// -------------------------------------------------------------
+// Pointer
+// -------------------------------------------------------------
 always_ff @(posedge clk or negedge reset_n) begin : proc_addr
   if(~reset_n) begin
     ptr_rd <= 0;
     ptr_wr <= 0;
-    // for (int i = 0; i < SIZE; i++) begin
-    //   fifo[i] <= 0;
-    // end
   end
   else begin
-    case(read,write)
+    case({read,write})
       2'b01: begin
-        if (~empty) begin
-          ptr_wr <= ptr_wr + 1;
-        end else begin
-          error <= 1;
-        end
+        ptr_wr <= ptr_wr + 1;
       end
       2'b10: begin
-        if (~full) begin
-          ptr_rd <= ptr_rd + 1;
-        end else begin
-          error <= 1;
-        end
+        ptr_rd <= ptr_rd + 1;
       end
       2'b11: begin
         ptr_wr <= ptr_wr + 1;
@@ -81,6 +83,9 @@ always_ff @(posedge clk or negedge reset_n) begin : proc_addr
   end
 end
 
+// -------------------------------------------------------------
+// Status FIFO
+// -------------------------------------------------------------
 always_comb begin : proc_status
   if(write && (ptr_wr == ptr_rd)) begin
     full = 1'b1;
