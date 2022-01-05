@@ -35,22 +35,25 @@ logic [ADDR_WIDTH - 1 : 0] ptr_wr;
 // -------------------------------------------------------------
 // FIFO Data Buffer
 // -------------------------------------------------------------
-always_comb begin : proc_fifo_data
-  if(reset_n) begin
+always_ff @(posedge clk or negedge reset_n) begin : proc_fifo
+  if(~reset_n) begin
     for (int i = 0; i < SIZE_FIFO; i++) begin
-      fifo[i] = 0;
+      fifo[i] <= 0;
     end
   end
+  else if(read & write) begin
+    fifo[ptr_wr] <= data_in;
+    data_out <= fifo[ptr_rd];
+  end
+  else if(read & ~write) begin
+    data_out <= fifo[ptr_rd];
+  end
+  else if(write & ~read) begin
+    fifo[ptr_wr] <= data_in;
+  end
   else begin
-    if(read & write) begin
-      fifo[ptr_wr] = data_in;
-      data_out = fifo[ptr_rd];
-    end
-    else if(read & ~write) begin
-      data_out = fifo[ptr_rd];
-    end
-    else if(write & ~read) begin
-      fifo[ptr_wr] = data_in;
+    for (int i = 0; i < SIZE_FIFO; i++) begin
+      fifo[i] <= fifo[i];
     end
   end
 end
@@ -86,21 +89,64 @@ end
 // -------------------------------------------------------------
 // Status FIFO
 // -------------------------------------------------------------
-always_comb begin : proc_status
-  if(write && (ptr_wr == ptr_rd)) begin
-    full = 1'b1;
+always_ff @(posedge clk or negedge reset_n) begin : proc_status
+  if(~reset_n) begin
+    full <= 0;
+    empty <= 1;
   end
   else begin
-    full = 0;
-  end
+    case ({write,read})
+      2'b01: begin
+        if (~empty) begin
+          full <= 0;
+          if (ptr_rd == ptr_wr) begin
+            empty <= 1;
+          end
+          else begin
+            empty <= empty;
+          end
+        end
+        else begin
+          full <= full;
+        end
+      end
 
-  if(read && (ptr_wr == ptr_rd)) begin
-    empty = 1'b1;
+      2'b10: begin
+        if (~full) begin
+          empty <= 0;
+          if (~empty & (ptr_rd == ptr_wr)) begin
+            full <= 1;
+          end
+          else begin
+            full <= full;
+          end
+        end
+        else begin
+          empty <= empty;
+        end
+      end
+      default : begin
+        empty <= empty;
+        full <= full;
+      end
+    endcase
   end
-  else begin
-    empty = 0;
-  end
-
 end
+
+// always_comb begin : proc_status
+//   if(write && (ptr_wr == ptr_rd)) begin
+//     full = 1'b1;
+//   end
+//   else begin
+//     full = 0;
+//   end
+
+//   if(read && (ptr_wr == ptr_rd)) begin
+//     empty = 1'b1;
+//   end
+//   else begin
+//     empty = 0;
+//   end
+// end
 
 endmodule : uart_fifo

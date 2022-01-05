@@ -15,6 +15,7 @@ module uart_transmitter #(
             SIZE_FIFO       = 8,
             BIT_COUNT_SIZE  = $clog2(DATA_SIZE+1)
   )  (
+  input                             sys_clk         ,
   input                             clk             , // Clock
   input                             reset_n         , // Asynchronous reset active low
   input                             write_data      ,
@@ -36,6 +37,7 @@ logic                           clear;
 logic                           write;
 logic                           full;
 logic                           empty;
+logic                           bit_parity;
 logic                           error_write_data;
 
 assign status_register = {5'b0,empty,full,error_write_data};
@@ -43,6 +45,9 @@ assign status_register = {5'b0,empty,full,error_write_data};
   |   5'b0  | empty | full  | error_write_data  | <== Status Register
   ===============================================---------------------
 */
+
+assign bit_parity = ^data_out;
+assign serial_data_out = TX_shift_reg[0];
 
 uart_control_transmitter
 uart_control_transmitter(
@@ -63,7 +68,7 @@ uart_fifo #(
   .DATA_SIZE (DATA_SIZE),
   .SIZE_FIFO (SIZE_FIFO))
 uart_fifo_transmitter(
-  .clk     (clk              ),
+  .clk     (sys_clk          ),
   .reset_n (reset_n          ),
   .write   (write            ),
   .empty   (empty            ),
@@ -100,13 +105,13 @@ end
 // -------------------------------------------------------------
 always_ff @(posedge clk or negedge reset_n) begin : proc_tx_shift_reg
   if(~reset_n) begin
-    TX_shift_reg <= 0;
+    TX_shift_reg <= {(DATA_SIZE+2){1'b1}};
   end
   else if(load_TX_shift_reg) begin
-    TX_shift_reg <= {data_out,1'b0};
+    TX_shift_reg <= {bit_parity,data_out,1'b0};
   end
   else if (shift) begin
-    TX_shift_reg <= {1'b1,TX_shift_reg[DATA_SIZE:1]};
+    TX_shift_reg <= {1'b1,TX_shift_reg[DATA_SIZE+1:1]};
   end
   else begin
     TX_shift_reg <= TX_shift_reg;

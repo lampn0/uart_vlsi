@@ -15,7 +15,8 @@ module uart_receiver #(
             SIZE_FIFO       = 8,
             BIT_COUNT_SIZE  = $clog2(DATA_SIZE)
   )  (
-  input                             clk             , // Clock
+  input                             sys_clk         , // Clock
+  input                             clk             ,
   input                             reset_n         , // Asynchronous reset active low
   input                             read_data       ,
   input                             serial_data_in  ,
@@ -98,7 +99,7 @@ uart_fifo #(
   .DATA_SIZE (DATA_SIZE),
   .SIZE_FIFO (SIZE_FIFO))
 uart_fifo_receiver(
-  .clk     (clk              ),
+  .clk     (sys_clk          ),
   .reset_n (reset_n          ),
   .write   (load_RX_shift_reg),
   .empty   (empty            ),

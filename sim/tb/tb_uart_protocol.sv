@@ -103,7 +103,7 @@ initial begin
   @(negedge clk);
   write_data_1 = 0;
   write_data_2 = 0;
-  repeat (1000) @(negedge clk);
+  repeat (10000) @(negedge clk);
   $finish;
 end
 

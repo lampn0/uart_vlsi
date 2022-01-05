@@ -56,6 +56,7 @@ uart_transmitter #(
   .DATA_SIZE (DATA_SIZE),
   .SIZE_FIFO (SIZE_FIFO))
 uart_transmitter(
+  .sys_clk        (clk               ),
   .clk            (clock              ),
   .reset_n        (reset_n            ),
   .write_data     (write_data         ),
@@ -71,6 +72,7 @@ uart_receiver #(
   .DATA_SIZE (DATA_SIZE),
   .SIZE_FIFO (SIZE_FIFO))
 uart_receiver(
+  .sys_clk        (clk                ),
   .clk            (sample_clk         ),
   .reset_n        (reset_n            ),
   .status_register(RX_status_register ),
