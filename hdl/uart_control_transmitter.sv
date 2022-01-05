@@ -16,12 +16,11 @@ module uart_control_transmitter (
   input         write_data        ,
   input         empty             ,
   input         full              ,
-  input         bit_count         ,
+  input         bit_count_done    ,
   output  logic load_TX_shift_reg ,
   output  logic write             ,
   output  logic shift             ,
   output  logic clear             ,
-  output  logic serial_data_out   ,
   output  logic error_write_data  
 );
 
@@ -33,8 +32,8 @@ module uart_control_transmitter (
 // State Encoding
 // -------------------------------------------------------------
 enum logic [1:0] {
-  IDLE    = 2'b01;
-  SENDING = 2'b10;
+  IDLE    = 2'b01,
+  SENDING = 2'b10
 } state, next_state;
 
 // -------------------------------------------------------------
@@ -47,6 +46,7 @@ always_comb begin : proc_write_fifo
   else begin
     write = write_data;
   end
+
   if (write_data & full) begin
     error_write_data = 1;
   end
@@ -61,7 +61,8 @@ end
 always_ff @(posedge clk or negedge reset_n) begin : proc_state
   if(~reset_n) begin
     state <= IDLE;
-  end else begin
+  end
+  else begin
     state <= next_state;
   end
 end
@@ -85,7 +86,7 @@ always_comb begin : proc_output_fsm
       end
     end
     SENDING: begin
-      if (bit_count == 9) begin
+      if (bit_count_done) begin
         clear = 1;
         next_state = IDLE;
       end

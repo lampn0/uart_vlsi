@@ -5,7 +5,7 @@
 //    Copyright Notification
 //    No part may be reproduced except as authorized by written permission.
 //
-//    Module: uart_protocol.uart_protocol.sv
+//    Module: uart_protocol.uart_generator_clock.sv
 //    Company: Dolphin Technology
 //    Author: lampn0
 //    Date: 15:14:49 12/03/21

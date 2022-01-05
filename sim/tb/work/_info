@@ -1,0 +1,211 @@
+m255
+K4
+z2
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+dD:/workspace/lampn182628/kien_truc_may_tinh/project/riscv32i_pipeline/sim
+T_opt
+!s110 1641372637
+V>0B:_LAi`miEBkdMEhKC43
+04 16 4 work tb_uart_protocol fast 0
+=1-30d0421069d5-61d55bdd-1e2-3858
+o-quiet -auto_acc_if_foreign -work work +acc
+Z0 tCvgOpt 0
+n@_opt
+OL;O;10.7c;67
+vtb_uart_protocol
+Z1 DXx6 sv_std 3 std 0 22 d=_JfHTnXCN[H5FjiaJJc0
+Z2 !s110 1641372620
+!i10b 1
+!s100 kDGkIG?^13O>H16b;W@WX3
+Ij:[M1H]RL66mEQW68;a@F3
+Z3 VDg1SIo80bB@j0V0VzS_@n1
+!s105 tb_uart_protocol_sv_unit
+S1
+Z4 dD:/workspace/lampn182628/VLSI/project/uart_vlsi/sim/tb
+w1641372618
+8D:/workspace/lampn182628/VLSI/project/uart_vlsi/sim/tb/tb_uart_protocol.sv
+FD:/workspace/lampn182628/VLSI/project/uart_vlsi/sim/tb/tb_uart_protocol.sv
+L0 14
+Z5 OL;L;10.7c;67
+r1
+!s85 0
+31
+Z6 !s108 1641372620.000000
+!s107 D:/workspace/lampn182628/VLSI/project/uart_vlsi/sim/tb/tb_uart_protocol.sv|
+!s90 -reportprogress|300|-work|work|-vopt|-sv|-stats=none|D:/workspace/lampn182628/VLSI/project/uart_vlsi/sim/tb/tb_uart_protocol.sv|
+!i113 0
+Z7 o-work work -sv -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+R0
+vuart_control_receiver
+R1
+R2
+!i10b 1
+!s100 >?4mPYYC4ibCG5`fRjf6:3
+IT]DO^GNoE5Mb@_N9NlFc30
+R3
+!s105 uart_control_receiver_sv_unit
+S1
+R4
+w1641371559
+8D:/workspace/lampn182628/VLSI/project/uart_vlsi/hdl/uart_control_receiver.sv
+FD:/workspace/lampn182628/VLSI/project/uart_vlsi/hdl/uart_control_receiver.sv
+Z8 L0 13
+R5
+r1
+!s85 0
+31
+R6
+!s107 D:/workspace/lampn182628/VLSI/project/uart_vlsi/hdl/uart_control_receiver.sv|
+!s90 -reportprogress|300|-work|work|-vopt|-sv|-stats=none|D:/workspace/lampn182628/VLSI/project/uart_vlsi/hdl/uart_control_receiver.sv|
+!i113 0
+R7
+R0
+vuart_control_transmitter
+R1
+R2
+!i10b 1
+!s100 ;U4@1fBTK8Ed7BRR6T>n60
+IcPPQkoFM:J62EmecPojUU3
+R3
+!s105 uart_control_transmitter_sv_unit
+S1
+R4
+w1641371589
+8D:/workspace/lampn182628/VLSI/project/uart_vlsi/hdl/uart_control_transmitter.sv
+FD:/workspace/lampn182628/VLSI/project/uart_vlsi/hdl/uart_control_transmitter.sv
+R8
+R5
+r1
+!s85 0
+31
+R6
+!s107 D:/workspace/lampn182628/VLSI/project/uart_vlsi/hdl/uart_control_transmitter.sv|
+!s90 -reportprogress|300|-work|work|-vopt|-sv|-stats=none|D:/workspace/lampn182628/VLSI/project/uart_vlsi/hdl/uart_control_transmitter.sv|
+!i113 0
+R7
+R0
+vuart_fifo
+R1
+R2
+!i10b 1
+!s100 KAO9IWFibZY12`XHGLHX@2
+IWRmEGhjYCXe:e2Z=j_QQc1
+R3
+!s105 uart_fifo_sv_unit
+S1
+R4
+w1640352429
+8D:/workspace/lampn182628/VLSI/project/uart_vlsi/hdl/uart_fifo.sv
+FD:/workspace/lampn182628/VLSI/project/uart_vlsi/hdl/uart_fifo.sv
+R8
+R5
+r1
+!s85 0
+31
+R6
+!s107 D:/workspace/lampn182628/VLSI/project/uart_vlsi/hdl/uart_fifo.sv|
+!s90 -reportprogress|300|-work|work|-vopt|-sv|-stats=none|D:/workspace/lampn182628/VLSI/project/uart_vlsi/hdl/uart_fifo.sv|
+!i113 0
+R7
+R0
+vuart_generator_clock
+R1
+R2
+!i10b 1
+!s100 h4Y_;6=on:OG64>oAJ`9l0
+I0:m8Q<Y6Q2<2QQ:zRi0SM0
+R3
+!s105 uart_generator_clock_sv_unit
+S1
+R4
+w1641368649
+8D:/workspace/lampn182628/VLSI/project/uart_vlsi/hdl/uart_generator_clock.sv
+FD:/workspace/lampn182628/VLSI/project/uart_vlsi/hdl/uart_generator_clock.sv
+R8
+R5
+r1
+!s85 0
+31
+R6
+!s107 D:/workspace/lampn182628/VLSI/project/uart_vlsi/hdl/uart_generator_clock.sv|
+!s90 -reportprogress|300|-work|work|-vopt|-sv|-stats=none|D:/workspace/lampn182628/VLSI/project/uart_vlsi/hdl/uart_generator_clock.sv|
+!i113 0
+R7
+R0
+vuart_protocol
+R1
+R2
+!i10b 1
+!s100 Dij_>UVAaddPn:MA_a9<<3
+Injgac7eEIoeNGHDWFOfcd2
+R3
+!s105 uart_protocol_sv_unit
+S1
+R4
+w1641372591
+8D:/workspace/lampn182628/VLSI/project/uart_vlsi/hdl/uart_protocol.sv
+FD:/workspace/lampn182628/VLSI/project/uart_vlsi/hdl/uart_protocol.sv
+R8
+R5
+r1
+!s85 0
+31
+R6
+!s107 D:/workspace/lampn182628/VLSI/project/uart_vlsi/hdl/uart_protocol.sv|
+!s90 -reportprogress|300|-work|work|-vopt|-sv|-stats=none|D:/workspace/lampn182628/VLSI/project/uart_vlsi/hdl/uart_protocol.sv|
+!i113 0
+R7
+R0
+vuart_receiver
+R1
+R2
+!i10b 1
+!s100 ATU=KH[cEhH1a1m?jNGW52
+IB43]m]600<P_5XB>O1S881
+R3
+!s105 uart_receiver_sv_unit
+S1
+R4
+w1641372304
+8D:/workspace/lampn182628/VLSI/project/uart_vlsi/hdl/uart_receiver.sv
+FD:/workspace/lampn182628/VLSI/project/uart_vlsi/hdl/uart_receiver.sv
+R8
+R5
+r1
+!s85 0
+31
+R6
+!s107 D:/workspace/lampn182628/VLSI/project/uart_vlsi/hdl/uart_receiver.sv|
+!s90 -reportprogress|300|-work|work|-vopt|-sv|-stats=none|D:/workspace/lampn182628/VLSI/project/uart_vlsi/hdl/uart_receiver.sv|
+!i113 0
+R7
+R0
+vuart_transmitter
+R1
+R2
+!i10b 1
+!s100 HR<OYlmB70?@@<2VMRVSI3
+IFUW2DGKT^hSN1EWBo8E^63
+R3
+!s105 uart_transmitter_sv_unit
+S1
+R4
+w1641372569
+8D:/workspace/lampn182628/VLSI/project/uart_vlsi/hdl/uart_transmitter.sv
+FD:/workspace/lampn182628/VLSI/project/uart_vlsi/hdl/uart_transmitter.sv
+R8
+R5
+r1
+!s85 0
+31
+R6
+!s107 D:/workspace/lampn182628/VLSI/project/uart_vlsi/hdl/uart_transmitter.sv|
+!s90 -reportprogress|300|-work|work|-vopt|-sv|-stats=none|D:/workspace/lampn182628/VLSI/project/uart_vlsi/hdl/uart_transmitter.sv|
+!i113 0
+R7
+R0
