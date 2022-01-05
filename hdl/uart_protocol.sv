@@ -13,7 +13,12 @@
 module uart_protocol #(
   parameter DATA_SIZE       = 8,
             SIZE_FIFO       = 8,
-            BIT_COUNT_SIZE  = $clog2(DATA_SIZE+1)
+            BIT_COUNT_SIZE  = $clog2(DATA_SIZE+1),
+            SYS_FREQ        = 100000000,
+            BAUD_RATE       = 9600,
+            CLOCK           = SYS_FREQ/BAUD_RATE,
+            SAMPLE          = 16,
+            BAUD_DVSR       = SYS_FREQ/(SAMPLE*BAUD_RATE)
   )  (
   input                             clk                 ,  // Clock
   input                             reset_n             ,  // Asynchronous reset active low
@@ -30,13 +35,14 @@ module uart_protocol #(
 // -------------------------------------------------------------
 // Signal Declaration
 // -------------------------------------------------------------
-
+logic clock     ;
+logic sample_clk;
 
 // -------------------------------------------------------------
 // Generator Clock
 // -------------------------------------------------------------
-uart_generator_clock
-uart_generator_clock(
+uart_generator_clock #(SYS_FREQ,BAUD_RATE,CLOCK,SAMPLE,BAUD_DVSR)
+uart_generator_clock (
   .clk       (clk       ),
   .reset_n   (reset_n   ),
   .clock     (clock     ),

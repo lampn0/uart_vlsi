@@ -14,7 +14,12 @@
 module tb_uart_protocol #(
   parameter DATA_SIZE       = 8,
             SIZE_FIFO       = 8,
-            BIT_COUNT_SIZE  = $clog2(DATA_SIZE+1)
+            BIT_COUNT_SIZE  = $clog2(DATA_SIZE+1),
+            SYS_FREQ        = 100000000,
+            BAUD_RATE       = 9600,
+            CLOCK           = SYS_FREQ/BAUD_RATE,
+            SAMPLE          = 16,
+            BAUD_DVSR       = SYS_FREQ/(SAMPLE*BAUD_RATE)
   )();
 logic                     clk                 ;
 logic                     reset_n             ;
@@ -33,8 +38,6 @@ logic [DATA_SIZE - 1 : 0] bus_data_in_2       ;
 logic [DATA_SIZE - 1 : 0] bus_data_out_2      ;
 logic [            7 : 0] TX_status_register_2;
 logic [            7 : 0] RX_status_register_2;
-
-always #5 clk = ~clk;
 
 /*===============================================---------------------
   |   5'b0  | empty | full  | error_write_data  | <== Status Register
@@ -72,13 +75,15 @@ uart_protocol_2(
   .bus_data_out      (bus_data_out_2      )
   );
 
+always #5 clk = ~clk;
+
 initial begin
-  clk = 1'b0;
-  reset_n = 1'b1;
+  clk = 0;
+  reset_n = 1;
+  repeat (2) @(negedge clk);
+  reset_n = 0;
   @(negedge clk);
-  reset_n = 1'b0;
-  @(negedge clk);
-  reset_n = 1'b1;
+  reset_n = 1;
   @(negedge clk);
   bus_data_in_1 = $random();
   write_data_1 = 1;
@@ -98,7 +103,7 @@ initial begin
   @(negedge clk);
   write_data_1 = 0;
   write_data_2 = 0;
-  repeat (10) @(negedge clk);
+  repeat (1000) @(negedge clk);
   $finish;
 end
 
