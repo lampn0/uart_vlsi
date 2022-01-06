@@ -12,105 +12,161 @@
 //-----------------------------------------------------------------------------------------------------------
 module uart_receiver #(
   parameter DATA_SIZE       = 8,
-            SIZE_FIFO       = 8,
             BIT_COUNT_SIZE  = $clog2(DATA_SIZE)
   )  (
-  input                             sys_clk         , // Clock
-  input                             clk             ,
-  input                             reset_n         , // Asynchronous reset active low
-  input                             read_data       ,
-  input                             serial_data_in  ,
-  output  logic [DATA_SIZE - 1 : 0] bus_data        ,
-  output  logic [            7 : 0] status_register 
+  input                             clk           , // Clock
+  input                             reset_n       , // Asynchronous reset active low
+  input                             serial_data_in,
+  output  logic [DATA_SIZE - 1 : 0] data_out      ,
+  output  logic                     rx_done       ,
+  output  logic                     parity_error  ,
+  output  logic                     stop_error    ,
+  output  logic                     break_error   ,
+  output  logic                     overflow_error,
 );
 
 // -------------------------------------------------------------
 // Signal Declaration
 // -------------------------------------------------------------
-logic [DATA_SIZE      + 1 : 0]  RX_shift_reg;
-logic [BIT_COUNT_SIZE     : 0]  bit_count;
-logic [3                  : 0]  sample_count;
-logic [DATA_SIZE      - 1 : 0]  data_in;
-logic                           load_RX_shift_reg;
-logic                           sample_count_done1;
-logic                           sample_count_done2;
-logic                           bit_count_done;
-logic                           inc_bit_count;
-logic                           clr_bit_count;
-logic                           inc_sample_count;
-logic                           clr_sample_count;
-logic                           read;
-logic                           write;
-logic                           shift;
-logic                           clear;
-logic                           full;
-logic                           empty;
-logic                           parity_check;
-logic                           overflow_error;
-logic                           break_error;
-logic                           stop_error;
-logic                           parity_error;
-logic                           RX_shift_reg_2_0;
-logic                           error_read_data;
-logic                           read_not_ready_out;
+logic [DATA_SIZE      : 0]  RX_shift_reg      ;
+logic [BIT_COUNT_SIZE : 0]  bit_count         ;
+logic [3              : 0]  sample_count      ;
+logic                       load_RX_shift_reg ;
+logic                       inc_bit_count     ;
+logic                       clr_bit_count     ;
+logic                       inc_sample_count  ;
+logic                       clr_sample_count  ;
+logic                       shift             ;
+logic                       clear             ;
+logic                       parity_check      ;
+logic                       RX_shift_reg_2_0  ;
+logic                       read_not_ready_out;
 
-assign status_register = {read_not_ready_out,
-                          overflow_error,
-                          stop_error,
-                          break_error,
-                          parity_error,
-                          empty,
-                          full,
-                          error_read_data};
-/*=====================================================================================================================--------------------
-  | read_not_ready_out | overflow_error | stop_error | break_error | parity_error | empty | full  | error_write_data  | <== Status Register
-  =====================================================================================================================---------------------
-*/
-
-uart_control_receiver
-uart_control_receiver(
-  .clk               (clk               ),
-  .reset_n           (reset_n           ),
-  .empty             (empty             ),
-  .full              (full              ),
-  .shift             (shift             ),
-  .bit_count_done    (bit_count_done    ),
-  .read              (read              ),
-  .read_data         (read_data         ),
-  .serial_data_in    (serial_data_in    ),
-  .sample_count_done1(sample_count_done1),
-  .sample_count_done2(sample_count_done2),
-  .RX_shift_reg_2_0  (RX_shift_reg_2_0  ),
-  .parity_check      (parity_check      ),
-  .load_RX_shift_reg (load_RX_shift_reg ),
-  .inc_sample_count  (inc_sample_count  ),
-  .clr_sample_count  (clr_sample_count  ),
-  .inc_bit_count     (inc_bit_count     ),
-  .clr_bit_count     (clr_bit_count     ),
-  .overflow_error    (overflow_error    ),
-  .stop_error        (stop_error        ),
-  .parity_error      (parity_error      ),
-  .break_error       (break_error       ),
-  .read_not_ready_out(read_not_ready_out),
-  .error_read_data   (error_read_data   )
-  );
-
-uart_fifo #(
-  .DATA_SIZE (DATA_SIZE),
-  .SIZE_FIFO (SIZE_FIFO))
-uart_fifo_receiver(
-  .clk     (sys_clk          ),
-  .reset_n (reset_n          ),
-  .write   (load_RX_shift_reg),
-  .empty   (empty            ),
-  .full    (full             ),
-  .data_in (data_in          ),
-  .read    (read             ),
-  .data_out(bus_data         )
-  );
+// assign status_register = {read_not_ready_out,
+//                           overflow_error,
+//                           stop_error,
+//                           break_error,
+//                           parity_error,
+//                           empty,
+//                           full,
+//                           error_read_data};
+// =====================================================================================================================--------------------
+//   | read_not_ready_out | overflow_error | stop_error | break_error | parity_error | empty | full  | error_write_data  | <== Status Register
+//   =====================================================================================================================---------------------
 
 
-assign data_in = RX_shift_reg[8:1];
+// -------------------------------------------------------------
+// State Encoding
+// -------------------------------------------------------------
+enum logic [2:0] {
+  IDLE      = 3'b001,
+  STARTING  = 3'b010,
+  RECEIVING = 3'b100
+} state, next_state;
+
+// -------------------------------------------------------------
+// FSM
+// -------------------------------------------------------------
+always_ff @(posedge clk or negedge reset_n) begin : proc_state
+  if(~reset_n) begin
+    state <= IDLE;
+  end
+  else begin
+    state <= next_state;
+  end
+end
+
+// -------------------------------------------------------------
+// FSM output signal
+// -------------------------------------------------------------
+always_comb begin : proc_output_fsm
+  stop_error = 0;
+  break_error = 0;
+  overflow_error = 0;
+  parity_error = 0;
+  inc_sample_count = 0;
+  clr_sample_count = 0;
+  inc_bit_count = 0;
+  clr_bit_count = 0;
+  read_not_ready_out = 0;
+  case (state)
+    IDLE: begin
+      if (full) begin
+        overflow_error = 1'b1;
+        next_state = IDLE;
+      end
+      else begin
+        if (serial_data_in == 1'b0) begin
+          next_state = STARTING;
+        end
+        else begin
+          next_state = IDLE;
+        end
+      end
+    end
+
+    STARTING: begin
+      if (serial_data_in == 1'b1) begin
+        clr_sample_count = 1'b1;
+        next_state = IDLE;
+      end
+      else begin
+        if (sample_count == 7) begin
+          clr_sample_count = 1'b1;
+          next_state = STARTING;
+        end
+        else begin
+          inc_sample_count = 1;
+          next_state = RECEIVING;
+        end
+      end
+    end
+
+    RECEIVING: begin
+      inc_sample_count = 1;
+      if (sample_count == 15) begin
+        if (bit_count == 9) begin
+          read_not_ready_out = 1'b1;
+          clr_sample_count = 1'b1;
+          clr_bit_count = 1'b1;
+          if (serial_data_in == 0) begin
+            if (RX_shift_reg_2_0 == 0) begin
+              break_error = 1'b1;
+              next_state = IDLE;
+            end
+            else begin
+              stop_error = 1'b1;
+              next_state = IDLE;
+            end
+          end
+          else begin
+            if (parity_check) begin
+              load_RX_shift_reg = 1'b1;
+              next_state = IDLE;
+            end
+            else begin
+              parity_error = 1'b1;
+              next_state = IDLE;
+            end
+          end
+        end
+        else begin
+          shift = 1;
+          inc_bit_count = 1;
+          clr_sample_count = 1;
+          next_state = RECEIVING;
+        end
+      end
+      else begin
+        next_state = RECEIVING;
+      end
+    end
+    default : next_state = IDLE;
+  endcase
+end
+
+
+assign data_out = RX_shift_reg[7:0];
 
 // -------------------------------------------------------------
 // Counter
@@ -145,12 +201,6 @@ always_ff @(posedge clk or negedge reset_n) begin : proc_sample_counter
   end
 end
 
-always_comb begin : proc_count_done
-  bit_count_done = (bit_count == 9);
-  sample_count_done1 = (sample_count == 7);
-  sample_count_done2 = (sample_count == 15);
-end
-
 // -------------------------------------------------------------
 // TX Shift Register
 // -------------------------------------------------------------
@@ -160,7 +210,7 @@ always_ff @(posedge clk or negedge reset_n) begin : proc_rx_shift_reg
   end
   else begin
     if(shift) begin
-      RX_shift_reg <= {serial_data_in,RX_shift_reg[DATA_SIZE - 1 : 1]};
+      RX_shift_reg <= {serial_data_in,RX_shift_reg[DATA_SIZE : 1]};
     end
     else begin
       RX_shift_reg <= RX_shift_reg;

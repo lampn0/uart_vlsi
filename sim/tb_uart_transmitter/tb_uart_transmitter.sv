@@ -14,27 +14,25 @@
 
 module tb_uart_transmitter #(
   parameter DATA_SIZE       = 8,
-            SIZE_FIFO       = 8,
             BIT_COUNT_SIZE  = $clog2(DATA_SIZE+1)
   )();
 
 logic                     clk            ;
 logic                     reset_n        ;
-logic                     write_data     ;
-logic [DATA_SIZE - 1 : 0] bus_data       ;
+logic                     tx_start_n     ;
+logic [DATA_SIZE - 1 : 0] data_in        ;
 logic                     serial_data_out;
-logic [            7 : 0] status_register;
+logic                     tx_done        ;
 
 uart_transmitter #(
-  .DATA_SIZE (DATA_SIZE),
-  .SIZE_FIFO (SIZE_FIFO))
+  .DATA_SIZE (DATA_SIZE))
 uart_transmitter(
   .clk            (clk            ),
   .reset_n        (reset_n        ),
-  .write_data     (write_data     ),
+  .data_in        (data_in        ),
+  .tx_start_n     (tx_start_n     ),
   .serial_data_out(serial_data_out),
-  .status_register(status_register),
-  .bus_data       (bus_data       )
+  .tx_done        (tx_done        )
   );
 
 always #5 clk = ~clk;
@@ -47,14 +45,12 @@ initial begin
   @(negedge clk);
   reset_n = 1;
   @(negedge clk);
-  bus_data = $random();
-  write_data = 1;
-  @(negedge clk);
-  bus_data = $random();
-  @(negedge clk);
-  write_data = 0;
-  bus_data = $random();
-  repeat (20) @(negedge clk);
+  data_in = 11001011;
+  tx_start_n = 0;
+  repeat (11) @(negedge clk);
+  data_in = $random();
+  tx_start_n = 0;
+  repeat (12) @(negedge clk);
   $finish;
 
 end

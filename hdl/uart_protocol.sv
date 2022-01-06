@@ -53,32 +53,31 @@ uart_generator_clock (
 // Transmitter
 // -------------------------------------------------------------
 uart_transmitter #(
-  .DATA_SIZE (DATA_SIZE),
-  .SIZE_FIFO (SIZE_FIFO))
+  .DATA_SIZE (DATA_SIZE))
 uart_transmitter(
-  .sys_clk        (clk               ),
-  .clk            (clock              ),
-  .reset_n        (reset_n            ),
-  .write_data     (write_data         ),
-  .serial_data_out(serial_data_out    ),
-  .bus_data       (bus_data_in        ),
-  .status_register(TX_status_register )
+  .clk            (clk            ),
+  .reset_n        (reset_n        ),
+  .tx_start_n     (tx_start_n     ),
+  .data_in        (data_in        ),
+  .serial_data_out(serial_data_out),
+  .tx_done        (tx_done        )
   );
 
 // -------------------------------------------------------------
-// Transmitter
+// Receiver
 // -------------------------------------------------------------
 uart_receiver #(
-  .DATA_SIZE (DATA_SIZE),
-  .SIZE_FIFO (SIZE_FIFO))
+  .DATA_SIZE (DATA_SIZE))
 uart_receiver(
-  .sys_clk        (clk                ),
-  .clk            (sample_clk         ),
-  .reset_n        (reset_n            ),
-  .status_register(RX_status_register ),
-  .bus_data       (bus_data_out       ),
-  .read_data      (read_data          ),
-  .serial_data_in (serial_data_in     )
+  .clk           (clk           ),
+  .reset_n       (reset_n       ),
+  .serial_data_in(serial_data_in),
+  .data_out      (data_out      ),
+  .rx_done       (rx_done       ),
+  .parity_error  (parity_error  ),
+  .stop_error    (stop_error    ),
+  .break_error   (break_error   ),
+  .overflow_error(overflow_error)
   );
 
 endmodule : uart_protocol
