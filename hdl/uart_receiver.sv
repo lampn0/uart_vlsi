@@ -17,12 +17,13 @@ module uart_receiver #(
   input                             clk           , // Clock
   input                             reset_n       , // Asynchronous reset active low
   input                             serial_data_in,
+  input                             rx_start_n    ,
   output  logic [DATA_SIZE - 1 : 0] data_out      ,
   output  logic                     rx_done       ,
   output  logic                     parity_error  ,
   output  logic                     stop_error    ,
   output  logic                     break_error   ,
-  output  logic                     overflow_error,
+  output  logic                     overflow_error
 );
 
 // -------------------------------------------------------------
@@ -37,12 +38,10 @@ logic                       clr_bit_count     ;
 logic                       inc_sample_count  ;
 logic                       clr_sample_count  ;
 logic                       shift             ;
-logic                       clear             ;
 logic                       parity_check      ;
 logic                       RX_shift_reg_2_0  ;
-logic                       read_not_ready_out;
 
-// assign status_register = {read_not_ready_out,
+// assign status_register = {rx_done,
 //                           overflow_error,
 //                           stop_error,
 //                           break_error,
@@ -51,9 +50,11 @@ logic                       read_not_ready_out;
 //                           full,
 //                           error_read_data};
 // =====================================================================================================================--------------------
-//   | read_not_ready_out | overflow_error | stop_error | break_error | parity_error | empty | full  | error_write_data  | <== Status Register
+//   | rx_done | overflow_error | stop_error | break_error | parity_error | empty | full  | error_write_data  | <== Status Register
 //   =====================================================================================================================---------------------
 
+assign parity_check = (^RX_shift_reg[7:0] == RX_shift_reg[8]);
+assign RX_shift_reg_2_0 = RX_shift_reg[2:0];
 
 // -------------------------------------------------------------
 // State Encoding
@@ -88,10 +89,12 @@ always_comb begin : proc_output_fsm
   clr_sample_count = 0;
   inc_bit_count = 0;
   clr_bit_count = 0;
-  read_not_ready_out = 0;
+  load_RX_shift_reg = 0;
+  shift = 0;
+  rx_done = 0;
   case (state)
     IDLE: begin
-      if (full) begin
+      if (rx_start_n) begin
         overflow_error = 1'b1;
         next_state = IDLE;
       end
@@ -111,7 +114,7 @@ always_comb begin : proc_output_fsm
         next_state = IDLE;
       end
       else begin
-        if (sample_count == 7) begin
+        if (sample_count == 4'd7) begin
           clr_sample_count = 1'b1;
           next_state = STARTING;
         end
@@ -124,9 +127,9 @@ always_comb begin : proc_output_fsm
 
     RECEIVING: begin
       inc_sample_count = 1;
-      if (sample_count == 15) begin
-        if (bit_count == 9) begin
-          read_not_ready_out = 1'b1;
+      if (sample_count == 4'd7) begin
+        if (bit_count == 4'd9) begin
+          rx_done = 1'b1;
           clr_sample_count = 1'b1;
           clr_bit_count = 1'b1;
           if (serial_data_in == 0) begin

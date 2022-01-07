@@ -37,8 +37,8 @@ logic                           bit_parity        ; //
 // State Encoding
 // -------------------------------------------------------------
 enum logic [1:0] {
-  IDLE      = 3'b01,
-  SENDING   = 3'b10
+  IDLE      = 2'b01,
+  SENDING   = 2'b10
 } state, next_state;
 
 // assign status_register = {5'b0,empty,full,error_write_data};
