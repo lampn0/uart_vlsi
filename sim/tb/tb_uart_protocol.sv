@@ -23,6 +23,7 @@ module tb_uart_protocol #(
   )();
 logic                     clk                 ;
 logic                     reset_n             ;
+
 logic                     write_data_1        ;
 logic                     read_data_1         ;
 logic                     serial_data_in_1    ;
@@ -43,7 +44,12 @@ logic [            7 : 0] RX_status_register_2;
   |   5'b0  | empty | full  | error_write_data  | <== Status Register
   ===============================================---------------------
 */
-uart_protocol
+uart_protocol #(
+  .DATA_SIZE     (DATA_SIZE ),
+  .SIZE_FIFO     (SIZE_FIFO ),
+  .SYS_FREQ      (SYS_FREQ  ),
+  .BAUD_RATE     (BAUD_RATE ),
+  .SAMPLE        (SAMPLE    ))
 uart_protocol_1(
   .clk               (clk                 ),
   .reset_n           (reset_n             ),
@@ -61,7 +67,12 @@ uart_protocol_1(
   | read_not_ready_out | overflow_error | stop_error | break_error | parity_error | empty | full  | error_write_data  | <== Status Register
   =====================================================================================================================---------------------
 */
-uart_protocol
+uart_protocol #(
+  .DATA_SIZE     (DATA_SIZE ),
+  .SIZE_FIFO     (SIZE_FIFO ),
+  .SYS_FREQ      (SYS_FREQ  ),
+  .BAUD_RATE     (BAUD_RATE ),
+  .SAMPLE        (SAMPLE    ))
 uart_protocol_2(
   .clk               (clk                 ),
   .reset_n           (reset_n             ),
@@ -103,7 +114,7 @@ initial begin
   @(negedge clk);
   write_data_1 = 0;
   write_data_2 = 0;
-  repeat (10000) @(negedge clk);
+  repeat (100000) @(negedge clk);
   $finish;
 end
 

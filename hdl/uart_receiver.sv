@@ -53,8 +53,9 @@ logic                       RX_shift_reg_2_0  ;
 //   | rx_done | overflow_error | stop_error | break_error | parity_error | empty | full  | error_write_data  | <== Status Register
 //   =====================================================================================================================---------------------
 
-assign parity_check = (^RX_shift_reg[7:0] == RX_shift_reg[8]);
+assign parity_check = rx_done ? (^RX_shift_reg[7:0] == RX_shift_reg[8]) : parity_check;
 assign RX_shift_reg_2_0 = RX_shift_reg[2:0];
+assign data_out = rx_done ? RX_shift_reg[7:0] : data_out;
 
 // -------------------------------------------------------------
 // State Encoding
@@ -116,18 +117,18 @@ always_comb begin : proc_output_fsm
       else begin
         if (sample_count == 4'd7) begin
           clr_sample_count = 1'b1;
-          next_state = STARTING;
+          next_state = RECEIVING;
         end
         else begin
           inc_sample_count = 1;
-          next_state = RECEIVING;
+          next_state = STARTING;
         end
       end
     end
 
     RECEIVING: begin
       inc_sample_count = 1;
-      if (sample_count == 4'd7) begin
+      if (sample_count == 4'd15) begin
         if (bit_count == 4'd9) begin
           rx_done = 1'b1;
           clr_sample_count = 1'b1;
@@ -167,9 +168,6 @@ always_comb begin : proc_output_fsm
     default : next_state = IDLE;
   endcase
 end
-
-
-assign data_out = RX_shift_reg[7:0];
 
 // -------------------------------------------------------------
 // Counter

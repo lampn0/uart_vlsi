@@ -20,16 +20,16 @@ module uart_protocol #(
             SAMPLE          = 16,
             BAUD_DVSR       = SYS_FREQ/(SAMPLE*BAUD_RATE)
   )  (
-  input                             clk                 ,  // Clock
-  input                             reset_n             ,  // Asynchronous reset active low
-  input                             write_data          ,
-  input                             read_data           ,
-  input                             serial_data_in      ,
-  input         [DATA_SIZE - 1 : 0] bus_data_in         ,
-  output  logic [DATA_SIZE - 1 : 0] bus_data_out        ,
-  output  logic                     serial_data_out     ,
-  output  logic [            7 : 0] TX_status_register  ,
-  output  logic [            7 : 0] RX_status_register  
+  input                             clk               ,  // Clock
+  input                             reset_n           ,  // Asynchronous reset active low
+  input                             write_data        ,
+  input                             read_data         ,
+  input                             serial_data_in    ,
+  input         [DATA_SIZE - 1 : 0] bus_data_in       ,
+  output  logic [DATA_SIZE - 1 : 0] bus_data_out      ,
+  output  logic                     serial_data_out   ,
+  output  logic [            7 : 0] TX_status_register,
+  output  logic [            7 : 0] RX_status_register
 );
 
 // -------------------------------------------------------------
@@ -37,6 +37,32 @@ module uart_protocol #(
 // -------------------------------------------------------------
 logic clock     ;
 logic sample_clk;
+logic [DATA_SIZE - 1 : 0] tx_data_in;
+logic [DATA_SIZE - 1 : 0] rx_data_out;
+logic                     tx_start_n;
+logic                     tx_done;
+logic                     tx_full;
+logic                     tx_empty;
+logic                     rx_start_n;
+logic                     rx_done;
+logic                     rx_full;
+logic                     rx_empty;
+logic                     stop_error;
+logic                     break_error;
+logic                     parity_error;
+logic                     overflow_error;
+
+assign tx_start_n = tx_empty;
+assign rx_start_n = rx_full;
+
+assign TX_status_register = {5'b0,tx_done,tx_empty,tx_full};
+assign RX_status_register = {1'b0,rx_done,
+                            overflow_error,
+                            stop_error,
+                            break_error,
+                            parity_error,
+                            rx_empty,
+                            rx_full};
 
 // -------------------------------------------------------------
 // Generator Clock
@@ -55,12 +81,26 @@ uart_generator_clock (
 uart_transmitter #(
   .DATA_SIZE (DATA_SIZE))
 uart_transmitter(
-  .clk            (clk            ),
+  .clk            (clock          ),
   .reset_n        (reset_n        ),
   .tx_start_n     (tx_start_n     ),
-  .data_in        (data_in        ),
+  .data_in        (tx_data_in     ),
   .serial_data_out(serial_data_out),
   .tx_done        (tx_done        )
+  );
+
+uart_fifo #(
+  .DATA_SIZE (DATA_SIZE),
+  .SIZE_FIFO (SIZE_FIFO))
+uart_fifo_transmitter(
+  .clk     (clk         ),
+  .reset_n (reset_n     ),
+  .data_in (bus_data_in ),
+  .data_out(tx_data_in  ),
+  .write   (write_data  ),
+  .read    (tx_done     ),
+  .full    (tx_full     ),
+  .empty   (tx_empty    )
   );
 
 // -------------------------------------------------------------
@@ -69,15 +109,30 @@ uart_transmitter(
 uart_receiver #(
   .DATA_SIZE (DATA_SIZE))
 uart_receiver(
-  .clk           (clk           ),
+  .clk           (sample_clk    ),
   .reset_n       (reset_n       ),
+  .rx_start_n    (rx_start_n    ),
   .serial_data_in(serial_data_in),
-  .data_out      (data_out      ),
+  .data_out      (rx_data_out   ),
   .rx_done       (rx_done       ),
   .parity_error  (parity_error  ),
   .stop_error    (stop_error    ),
   .break_error   (break_error   ),
   .overflow_error(overflow_error)
+  );
+
+uart_fifo #(
+  .DATA_SIZE (DATA_SIZE),
+  .SIZE_FIFO (SIZE_FIFO))
+uart_fifo_receiver(
+  .clk     (clk         ),
+  .reset_n (reset_n     ),
+  .data_in (rx_data_out ),
+  .data_out(bus_data_out),
+  .write   (rx_done     ),
+  .read    (read_data   ),
+  .full    (rx_full        ),
+  .empty   (rx_empty       )
   );
 
 endmodule : uart_protocol
