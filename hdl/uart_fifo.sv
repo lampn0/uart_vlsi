@@ -32,7 +32,7 @@ logic [DATA_SIZE  - 1 : 0] fifo [SIZE_FIFO - 1 : 0];
 logic [ADDR_WIDTH - 1 : 0] ptr_rd, ptr_rd_next, ptr_rd_succ;
 logic [ADDR_WIDTH - 1 : 0] ptr_wr, ptr_wr_next, ptr_wr_succ;
 logic                      wr_en ;
-logic full_next, empty_next;
+logic                      full_next, empty_next;
 
 // -------------------------------------------------------------
 // FIFO Data Buffer
@@ -48,13 +48,10 @@ always_ff @(posedge clk or negedge reset_n) begin : proc_fifo
   end
   else if(wr_en & rd_en) begin
     fifo[ptr_wr] <= data_in;
-    // data_out <= fifo[ptr_rd];
   end
   else if(wr_en) begin
     fifo[ptr_wr] <= data_in;
   end
-  // else if(rd_en)
-    // data_out <= fifo[ptr_rd];
 end
 
 // -------------------------------------------------------------
