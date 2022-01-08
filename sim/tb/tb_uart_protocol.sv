@@ -8,7 +8,7 @@
 //    Module: uart_protocol.tb_uart_protocol.sv
 //    Company: Dolphin Technology
 //    Author: lampn0
-//    Date: 15:00:49 05/01/21
+//    Date: 08:26:49 08/01/22
 //-----------------------------------------------------------------------------------------------------------
 `timescale 1ns/1ns
 module tb_uart_protocol #(

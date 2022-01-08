@@ -8,7 +8,7 @@
 //    Module: uart_protocol.uart_transmitter.sv
 //    Company: Dolphin Technology
 //    Author: lampn0
-//    Date: 15:14:49 06/01/22
+//    Date: 08:26:49 08/01/22
 //-----------------------------------------------------------------------------------------------------------
 module uart_transmitter #(
   parameter DATA_SIZE       = 8,
@@ -40,11 +40,6 @@ enum logic [1:0] {
   IDLE      = 2'b01,
   SENDING   = 2'b10
 } state, next_state;
-
-// assign status_register = {5'b0,empty,full,error_write_data};
-// ===============================================---------------------
-//   |   5'b0  | empty | full  | error_write_data  | <== Status Register
-//   ===============================================---------------------
 
 assign bit_parity = ^data_in;
 assign serial_data_out = TX_shift_reg[0];

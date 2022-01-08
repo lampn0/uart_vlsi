@@ -41,18 +41,6 @@ logic                       shift             ;
 logic                       parity_check      ;
 logic                       RX_shift_reg_2_0  ;
 
-// assign status_register = {rx_done,
-//                           overflow_error,
-//                           stop_error,
-//                           break_error,
-//                           parity_error,
-//                           empty,
-//                           full,
-//                           error_read_data};
-// =====================================================================================================================--------------------
-//   | rx_done | overflow_error | stop_error | break_error | parity_error | empty | full  | error_write_data  | <== Status Register
-//   =====================================================================================================================---------------------
-
 assign parity_check = rx_done ? (^RX_shift_reg[7:0] == RX_shift_reg[8]) : parity_check;
 assign RX_shift_reg_2_0 = RX_shift_reg[2:0];
 assign data_out = rx_done ? RX_shift_reg[7:0] : data_out;

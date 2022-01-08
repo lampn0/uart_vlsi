@@ -8,7 +8,7 @@
 //    Module: uart_protocol.uart_protocol.sv
 //    Company: Dolphin Technology
 //    Author: lampn0
-//    Date: 15:14:49 12/03/21
+//    Date: 08:26:49 08/01/22
 //-----------------------------------------------------------------------------------------------------------
 module uart_protocol #(
   parameter DATA_SIZE       = 8,
@@ -35,8 +35,8 @@ module uart_protocol #(
 // -------------------------------------------------------------
 // Signal Declaration
 // -------------------------------------------------------------
-logic clock     ;
-logic sample_clk;
+logic                     clock     ;
+logic                     sample_clk;
 logic [DATA_SIZE - 1 : 0] tx_data_in;
 logic [DATA_SIZE - 1 : 0] rx_data_out;
 logic                     tx_start_n;
@@ -55,7 +55,14 @@ logic                     overflow_error;
 assign tx_start_n = tx_empty;
 assign rx_start_n = rx_full;
 
+// ===============================================---------------------
+//   |   5'b0  | empty | full  | error_write_data  | <== Status Register
+//   ===============================================---------------------
 assign TX_status_register = {5'b0,tx_done,tx_empty,tx_full};
+
+// =====================================================================================================================--------------------
+//   | rx_done | overflow_error | stop_error | break_error | parity_error | empty | full  | error_write_data  | <== Status Register
+//   =====================================================================================================================---------------------
 assign RX_status_register = {1'b0,rx_done,
                             overflow_error,
                             stop_error,

@@ -8,7 +8,7 @@
 //    Module: uart_protocol.uart_fifo.sv
 //    Company: Dolphin Technology
 //    Author: lampn0
-//    Date: 15:14:49 12/03/21
+//    Date: 08:26:49 01/08/22
 //-----------------------------------------------------------------------------------------------------------
 module uart_fifo #(
   parameter DATA_SIZE   = 8,
@@ -28,110 +28,87 @@ module uart_fifo #(
 // -------------------------------------------------------------
 // Signal Declaration
 // -------------------------------------------------------------
-logic [DATA_SIZE  - 1 : 0] fifo [SIZE_FIFO : 0];
-logic [ADDR_WIDTH - 1 : 0] ptr_rd;
-logic [ADDR_WIDTH - 1 : 0] ptr_wr;
+logic [DATA_SIZE  - 1 : 0] fifo [SIZE_FIFO - 1 : 0];
+logic [ADDR_WIDTH - 1 : 0] ptr_rd, ptr_rd_next, ptr_rd_succ;
+logic [ADDR_WIDTH - 1 : 0] ptr_wr, ptr_wr_next, ptr_wr_succ;
+logic                      wr_en ;
+logic full_next, empty_next;
 
 // -------------------------------------------------------------
 // FIFO Data Buffer
 // -------------------------------------------------------------
+assign wr_en = write & ~full ;
+assign rd_en = read & ~empty ;
+assign data_out = fifo[ptr_rd];
 always_ff @(posedge clk or negedge reset_n) begin : proc_fifo
   if(~reset_n) begin
     for (int i = 0; i < SIZE_FIFO; i++) begin
       fifo[i] <= 0;
     end
   end
-  else if(read & write) begin
+  else if(wr_en & rd_en) begin
     fifo[ptr_wr] <= data_in;
-    data_out <= fifo[ptr_rd];
+    // data_out <= fifo[ptr_rd];
   end
-  else if(read & ~write) begin
-    data_out <= fifo[ptr_rd];
-  end
-  else if(write & ~read) begin
+  else if(wr_en) begin
     fifo[ptr_wr] <= data_in;
   end
-  else begin
-    for (int i = 0; i < SIZE_FIFO; i++) begin
-      fifo[i] <= fifo[i];
-    end
-  end
+  // else if(rd_en)
+    // data_out <= fifo[ptr_rd];
 end
 
 // -------------------------------------------------------------
 // Pointer
 // -------------------------------------------------------------
-always_ff @(posedge clk or negedge reset_n) begin : proc_addr
+always_ff @(posedge clk or negedge reset_n) begin
   if(~reset_n) begin
-    ptr_rd <= 0;
-    ptr_wr <= 0;
+    ptr_wr <= 0 ;
+    ptr_rd <= 0 ;
+    full <= 1'b0;
+    empty <= 1'b1;
   end
   else begin
-    case({read,write})
-      2'b01: begin
-        ptr_wr <= ptr_wr + 1;
-      end
-      2'b10: begin
-        ptr_rd <= ptr_rd + 1;
-      end
-      2'b11: begin
-        ptr_wr <= ptr_wr + 1;
-        ptr_rd <= ptr_rd + 1;
-      end
-      default begin
-        ptr_wr <= ptr_wr;
-        ptr_rd <= ptr_rd;
-      end
-    endcase // write,read
+    ptr_wr <= ptr_wr_next ;
+    ptr_rd <= ptr_rd_next ;
+    full <= full_next     ;
+    empty <= empty_next   ;
   end
+end
+
+always_comb begin
+  ptr_wr_succ = ptr_wr + 1'b1;
+  ptr_rd_succ = ptr_rd + 1'b1;
+  ptr_rd_next = ptr_rd ;
+  ptr_wr_next = ptr_wr ;
+  full_next = full;
+  empty_next = empty;
+  case({write, read})
+    2'b01: begin
+      if(~empty) begin
+        ptr_rd_next = ptr_rd_succ ;
+        full_next = 1'b0;
+        if(ptr_rd_succ == ptr_wr)
+          empty_next = 1'b1;
+      end
+    end
+    2'b10: begin
+      if(~full) begin
+        ptr_wr_next = ptr_wr_succ ;
+        empty_next = 1'b0 ;
+        if(ptr_wr_succ == ptr_rd)
+          full_next = 1'b1;
+      end
+    end
+    2'b11: begin
+      ptr_wr_next = ptr_wr_succ ;
+      ptr_rd_next = ptr_rd_succ ;
+    end
+  endcase
 end
 
 // -------------------------------------------------------------
 // Status FIFO
 // -------------------------------------------------------------
-always_ff @(posedge clk or negedge reset_n) begin : proc_status
-  if(~reset_n) begin
-    full <= 0;
-    empty <= 1;
-  end
-  else begin
-    case ({write,read})
-      2'b01: begin
-        if (~empty) begin
-          full <= 0;
-          if (ptr_rd == ptr_wr) begin
-            empty <= 1;
-          end
-          else begin
-            empty <= empty;
-          end
-        end
-        else begin
-          full <= full;
-        end
-      end
-
-      2'b10: begin
-        if (~full) begin
-          empty <= 0;
-          if (~empty & (ptr_rd == ptr_wr)) begin
-            full <= 1;
-          end
-          else begin
-            full <= full;
-          end
-        end
-        else begin
-          empty <= empty;
-        end
-      end
-      default : begin
-        empty <= empty;
-        full <= full;
-      end
-    endcase
-  end
-end
 
 // always_comb begin : proc_status
 //   if(write && (ptr_wr == ptr_rd)) begin

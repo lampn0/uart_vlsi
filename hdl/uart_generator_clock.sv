@@ -8,7 +8,7 @@
 //    Module: uart_protocol.uart_generator_clock.sv
 //    Company: Dolphin Technology
 //    Author: lampn0
-//    Date: 15:14:49 12/03/21
+//    Date: 08:26:49 08/01/22
 //-----------------------------------------------------------------------------------------------------------
 module uart_generator_clock #(
   parameter SYS_FREQ  = 100000000,
