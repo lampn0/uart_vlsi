@@ -41,9 +41,8 @@ logic                       shift             ;
 logic                       parity_check      ;
 logic                       RX_shift_reg_2_0  ;
 
-assign parity_check = rx_done ? (^RX_shift_reg[7:0] == RX_shift_reg[8]) : parity_check;
+assign parity_check = rx_done ? (^RX_shift_reg[7:0] == RX_shift_reg[8]) : 1;
 assign RX_shift_reg_2_0 = RX_shift_reg[2:0];
-assign data_out = rx_done ? RX_shift_reg[7:0] : data_out;
 
 // -------------------------------------------------------------
 // State Encoding
@@ -70,90 +69,91 @@ end
 // FSM output signal
 // -------------------------------------------------------------
 always_comb begin : proc_output_fsm
-  stop_error = 0;
-  break_error = 0;
-  overflow_error = 0;
-  parity_error = 0;
-  inc_sample_count = 0;
-  clr_sample_count = 0;
-  inc_bit_count = 0;
-  clr_bit_count = 0;
-  load_RX_shift_reg = 0;
-  shift = 0;
-  rx_done = 0;
+  stop_error          = 0;
+  break_error         = 0;
+  overflow_error      = 0;
+  parity_error        = 0;
+  inc_sample_count    = 0;
+  clr_sample_count    = 0;
+  inc_bit_count       = 0;
+  clr_bit_count       = 0;
+  load_RX_shift_reg   = 0;
+  shift               = 0;
+  rx_done             = 0;
+
   case (state)
     IDLE: begin
       if (rx_start_n) begin
-        overflow_error = 1'b1;
-        next_state = IDLE;
+        overflow_error    = 1'b1;
+        next_state        = IDLE;
       end
       else begin
         if (serial_data_in == 1'b0) begin
-          next_state = STARTING;
+          next_state      = STARTING;
         end
         else begin
-          next_state = IDLE;
+          next_state      = IDLE;
         end
       end
     end
 
     STARTING: begin
       if (serial_data_in == 1'b1) begin
-        clr_sample_count = 1'b1;
-        next_state = IDLE;
+        clr_sample_count  = 1'b1;
+        next_state        = IDLE;
       end
       else begin
         if (sample_count == 4'd7) begin
-          clr_sample_count = 1'b1;
-          next_state = RECEIVING;
+          clr_sample_count= 1'b1;
+          next_state      = RECEIVING;
         end
         else begin
           inc_sample_count = 1;
-          next_state = STARTING;
+          next_state      = STARTING;
         end
       end
     end
 
     RECEIVING: begin
-      inc_sample_count = 1;
+      inc_sample_count    = 1;
       if (sample_count == 4'd15) begin
         if (bit_count == 4'd9) begin
-          rx_done = 1'b1;
-          clr_sample_count = 1'b1;
-          clr_bit_count = 1'b1;
+          rx_done         = 1'b1;
+          clr_sample_count= 1'b1;
+          clr_bit_count   = 1'b1;
           if (serial_data_in == 0) begin
             if (RX_shift_reg_2_0 == 0) begin
               break_error = 1'b1;
-              next_state = IDLE;
+              next_state  = IDLE;
             end
             else begin
-              stop_error = 1'b1;
-              next_state = IDLE;
+              stop_error  = 1'b1;
+              next_state  = IDLE;
             end
           end
           else begin
             if (parity_check) begin
               load_RX_shift_reg = 1'b1;
-              next_state = IDLE;
+              next_state  = IDLE;
             end
             else begin
-              parity_error = 1'b1;
-              next_state = IDLE;
+              parity_error= 1'b1;
+              next_state  = IDLE;
             end
           end
         end
         else begin
-          shift = 1;
-          inc_bit_count = 1;
-          clr_sample_count = 1;
-          next_state = RECEIVING;
+          shift           = 1;
+          inc_bit_count   = 1;
+          clr_sample_count= 1;
+          next_state      = RECEIVING;
         end
       end
       else begin
-        next_state = RECEIVING;
+        next_state        = RECEIVING;
       end
     end
-    default : next_state = IDLE;
+    default : next_state  = IDLE;
   endcase
 end
 
@@ -203,6 +203,13 @@ always_ff @(posedge clk or negedge reset_n) begin : proc_rx_shift_reg
     end
     else begin
       RX_shift_reg <= RX_shift_reg;
+    end
+
+    if (rx_done) begin
+      data_out <= RX_shift_reg[7:0];
+    end
+    else begin
+      data_out <= data_out;
     end
   end
 end
