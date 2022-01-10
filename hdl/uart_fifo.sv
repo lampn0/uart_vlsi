@@ -22,7 +22,7 @@ module uart_fifo #(
   input                             read      ,
   output logic  [DATA_SIZE - 1 : 0] data_out  ,
   output logic                      full      ,
-  output logic                      empty     
+  output logic                      empty
 );
 
 // -------------------------------------------------------------

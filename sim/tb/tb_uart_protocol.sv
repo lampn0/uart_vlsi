@@ -88,6 +88,8 @@ uart_protocol_2(
 
 always #5 clk = ~clk;
 
+assign bus_data_in_2 = bus_data_out_2;
+
 initial begin
   clk = 0;
   reset_n = 1;
@@ -99,22 +101,35 @@ initial begin
   bus_data_in_1 = $random();
   write_data_1 = 1;
   write_data_2 = 0;
+  read_data_1 = 0;
+  read_data_2 = 0;
+  // Find the activation time of read_data_2
+  @(negedge clk);
+  write_data_1 = 0;
+ 
+  repeat (2) @(negedge clk);
+  // bus_data_in_2 = $random();
+  // Connect in 2 to out 1 or vice versa. Only connect 1 way, read data from the other
+  // bus_data_in_1 = $random();
+  // write_data_1 = 1;
+  // write_data_2 = 0;
+  // repeat (10) @(negedge clk);
+  // write_data_2 = 1;
+  // @(negedge clk);
+  // bus_data_in_2 = $random();
+  // bus_data_in_1 = $random();
+  // @(negedge clk);
+  // write_data_1 = 0;
+  // write_data_2 = 0;
+  repeat (230000) @(negedge clk);
   read_data_2 = 1;
   @(negedge clk);
-  write_data_1 = 0;
-  repeat (2) @(negedge clk);
-  bus_data_in_2 = $random();
-  bus_data_in_1 = $random();
-  write_data_1 = 1;
-  write_data_2 = 1;
-  read_data_1 = 1;
-  @(negedge clk);
-  bus_data_in_2 = $random();
-  bus_data_in_1 = $random();
-  @(negedge clk);
-  write_data_1 = 0;
-  write_data_2 = 0;
-  repeat (300000) @(negedge clk);
+  read_data_2 = 0;
+  // write_data_2 = 1;
+  repeat (1000) @(negedge clk);
+  read_data_2 = 0;
+  repeat (100000) @(negedge clk);
+  // Freq: 100MHz, time unit 1ns -> Repeat ? clock to finish the work?
   $finish;
 end
 

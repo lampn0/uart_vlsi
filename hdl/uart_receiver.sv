@@ -40,8 +40,9 @@ logic                       clr_sample_count  ;
 logic                       shift             ;
 logic                       parity_check      ;
 logic                       RX_shift_reg_2_0  ;
+logic                       bit_count_done    ;
 
-assign parity_check = rx_done ? (^RX_shift_reg[7:0] == RX_shift_reg[8]) : 1;
+assign parity_check = bit_count_done ? (^RX_shift_reg[7:0] == RX_shift_reg[8]) : 1;
 assign RX_shift_reg_2_0 = RX_shift_reg[2:0];
 
 // -------------------------------------------------------------
@@ -79,7 +80,7 @@ always_comb begin : proc_output_fsm
   clr_bit_count       = 0;
   load_RX_shift_reg   = 0;
   shift               = 0;
-  rx_done             = 0;
+  bit_count_done      = 0;
 
   case (state)
     IDLE: begin
@@ -118,7 +119,7 @@ always_comb begin : proc_output_fsm
       inc_sample_count    = 1;
       if (sample_count == 4'd15) begin
         if (bit_count == 4'd9) begin
-          rx_done         = 1'b1;
+          bit_count_done   = 1'b1;
           clr_sample_count= 1'b1;
           clr_bit_count   = 1'b1;
           if (serial_data_in == 0) begin
@@ -205,11 +206,13 @@ always_ff @(posedge clk or negedge reset_n) begin : proc_rx_shift_reg
       RX_shift_reg <= RX_shift_reg;
     end
 
-    if (rx_done) begin
+    if (bit_count_done) begin
       data_out <= RX_shift_reg[7:0];
+      rx_done <= 1'b1;
     end
     else begin
       data_out <= data_out;
+      rx_done <= 0;
     end
   end
 end

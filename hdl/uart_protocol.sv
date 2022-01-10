@@ -52,6 +52,13 @@ logic                     break_error;
 logic                     parity_error;
 logic                     overflow_error;
 
+enum logic [1:0] {
+  IDLE      = 2'b01,
+  CHECK     = 2'b10
+} state, next_state;
+
+logic write_fifo_receiver;
+
 assign tx_start_n = tx_empty;
 assign rx_start_n = rx_full;
 
@@ -113,6 +120,8 @@ uart_fifo_transmitter(
 // -------------------------------------------------------------
 // Receiver
 // -------------------------------------------------------------
+
+
 uart_receiver #(
   .DATA_SIZE (DATA_SIZE))
 uart_receiver(
@@ -136,10 +145,42 @@ uart_fifo_receiver(
   .reset_n (reset_n     ),
   .data_in (rx_data_out ),
   .data_out(bus_data_out),
-  .write   (rx_done     ),
+  .write   (write_fifo_receiver     ),
   .read    (read_data   ),
   .full    (rx_full        ),
   .empty   (rx_empty       )
   );
+
+
+
+always_ff @(posedge clk or negedge reset_n) begin : fsm 
+  if (~reset_n) begin
+    state <= IDLE;
+  end
+  else state <= next_state;  
+end
+
+always_comb begin : fsm_output
+  case(state)
+    IDLE: begin
+      if (rx_done) begin
+        write_fifo_receiver = 1;
+        next_state = CHECK;
+      end
+      else begin
+        write_fifo_receiver = 0;
+        next_state = IDLE;
+      end
+    end
+    CHECK: begin
+      write_fifo_receiver = 0;
+      if (~rx_done) begin
+        next_state = IDLE;
+      end
+      else next_state = CHECK;
+    end
+  endcase
+end
+
 
 endmodule : uart_protocol

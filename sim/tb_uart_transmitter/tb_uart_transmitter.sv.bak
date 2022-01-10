@@ -50,7 +50,7 @@ initial begin
   repeat (11) @(negedge clk);
   data_in = $random();
   tx_start_n = 0;
-  repeat (30) @(negedge clk);
+  repeat (12) @(negedge clk);
   $finish;
 
 end

@@ -60,9 +60,11 @@ initial begin
   rx_start_n = 0;
   @(negedge clk);
   serial_data_in = 0;
-  repeat (8) begin
+  repeat (4) begin
     @(negedge clk);
-    serial_data_in = $random();
+    serial_data_in = 1;
+    @(negedge clk);
+    serial_data_in = 0;
   end
   @(negedge clk);
   serial_data_in = 1;
