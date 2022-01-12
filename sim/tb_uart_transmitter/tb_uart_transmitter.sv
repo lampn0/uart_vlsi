@@ -1,15 +1,4 @@
 //-----------------------------------------------------------------------------------------------------------
-//    Copyright (C) 2021 by Dolphin Technology
-//    All right reserved.
-//
-//    Copyright Notification
-//    No part may be reproduced except as authorized by written permission.
-//
-//    Module: uart_protocol.uart_protocol.sv
-//    Company: Dolphin Technology
-//    Author: lampn0
-//    Date: 15:14:49 12/03/21
-//-----------------------------------------------------------------------------------------------------------
 `timescale 1ns/1ns
 
 module tb_uart_transmitter #(
