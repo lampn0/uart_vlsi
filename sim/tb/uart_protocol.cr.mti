@@ -1,37 +1,9 @@
-D:/workspace/lampn182628/VLSI/project/uart_vlsi/sim/tb_uart_receiver/tb_uart_receiver.sv {1 {vlog -work work -vopt -sv -stats=none D:/workspace/lampn182628/VLSI/project/uart_vlsi/sim/tb_uart_receiver/tb_uart_receiver.sv
-QuestaSim-64 vlog 10.7c Compiler 2018.08 Aug 18 2018
--- Compiling module tb_uart_receiver
-
-Top level modules:
-	tb_uart_receiver
-
-} {} {}} D:/workspace/lampn182628/VLSI/project/uart_vlsi/sim/tb_uart_transmitter/tb_uart_transmitter.sv {1 {vlog -work work -vopt -sv -stats=none D:/workspace/lampn182628/VLSI/project/uart_vlsi/sim/tb_uart_transmitter/tb_uart_transmitter.sv
-QuestaSim-64 vlog 10.7c Compiler 2018.08 Aug 18 2018
--- Compiling module tb_uart_transmitter
-
-Top level modules:
-	tb_uart_transmitter
-
-} {} {}} D:/workspace/lampn182628/VLSI/project/uart_vlsi/hdl/uart_fifo.sv {1 {vlog -work work -vopt -sv -stats=none D:/workspace/lampn182628/VLSI/project/uart_vlsi/hdl/uart_fifo.sv
+D:/workspace/lampn182628/VLSI/project/uart_vlsi/hdl/uart_fifo.sv {1 {vlog -work work -vopt -sv -stats=none D:/workspace/lampn182628/VLSI/project/uart_vlsi/hdl/uart_fifo.sv
 QuestaSim-64 vlog 10.7c Compiler 2018.08 Aug 18 2018
 -- Compiling module uart_fifo
 
 Top level modules:
 	uart_fifo
-
-} {} {}} D:/workspace/lampn182628/VLSI/project/uart_vlsi/sim/tb/tb_uart_protocol.sv {1 {vlog -work work -vopt -sv -stats=none D:/workspace/lampn182628/VLSI/project/uart_vlsi/sim/tb/tb_uart_protocol.sv
-QuestaSim-64 vlog 10.7c Compiler 2018.08 Aug 18 2018
--- Compiling module tb_uart_protocol
-
-Top level modules:
-	tb_uart_protocol
-
-} {} {}} D:/workspace/lampn182628/VLSI/project/uart_vlsi/sim/tb_uart_fifo/tb_uart_fifo.sv {1 {vlog -work work -vopt -sv -stats=none D:/workspace/lampn182628/VLSI/project/uart_vlsi/sim/tb_uart_fifo/tb_uart_fifo.sv
-QuestaSim-64 vlog 10.7c Compiler 2018.08 Aug 18 2018
--- Compiling module tb_uart_fifo
-
-Top level modules:
-	tb_uart_fifo
 
 } {} {}} D:/workspace/lampn182628/VLSI/project/uart_vlsi/hdl/uart_transmitter.sv {1 {vlog -work work -vopt -sv -stats=none D:/workspace/lampn182628/VLSI/project/uart_vlsi/hdl/uart_transmitter.sv
 QuestaSim-64 vlog 10.7c Compiler 2018.08 Aug 18 2018
@@ -40,12 +12,12 @@ QuestaSim-64 vlog 10.7c Compiler 2018.08 Aug 18 2018
 Top level modules:
 	uart_transmitter
 
-} {} {}} D:/workspace/lampn182628/VLSI/project/uart_vlsi/hdl/uart_protocol.sv {1 {vlog -work work -vopt -sv -stats=none D:/workspace/lampn182628/VLSI/project/uart_vlsi/hdl/uart_protocol.sv
+} {} {}} D:/workspace/lampn182628/VLSI/project/uart_vlsi/hdl/uart_receiver.sv {1 {vlog -work work -vopt -sv -stats=none D:/workspace/lampn182628/VLSI/project/uart_vlsi/hdl/uart_receiver.sv
 QuestaSim-64 vlog 10.7c Compiler 2018.08 Aug 18 2018
--- Compiling module uart_protocol
+-- Compiling module uart_receiver
 
 Top level modules:
-	uart_protocol
+	uart_receiver
 
 } {} {}} D:/workspace/lampn182628/VLSI/project/uart_vlsi/hdl/uart_generator_clock.sv {1 {vlog -work work -vopt -sv -stats=none D:/workspace/lampn182628/VLSI/project/uart_vlsi/hdl/uart_generator_clock.sv
 QuestaSim-64 vlog 10.7c Compiler 2018.08 Aug 18 2018
@@ -53,12 +25,5 @@ QuestaSim-64 vlog 10.7c Compiler 2018.08 Aug 18 2018
 
 Top level modules:
 	uart_generator_clock
-
-} {} {}} D:/workspace/lampn182628/VLSI/project/uart_vlsi/sim/tb_uart_clock_generator/tb_clock_generator.sv {1 {vlog -work work -vopt -sv -stats=none D:/workspace/lampn182628/VLSI/project/uart_vlsi/sim/tb_uart_clock_generator/tb_clock_generator.sv
-QuestaSim-64 vlog 10.7c Compiler 2018.08 Aug 18 2018
--- Compiling module tb_clock_generator
-
-Top level modules:
-	tb_clock_generator
 
 } {} {}}
