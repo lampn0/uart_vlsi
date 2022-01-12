@@ -110,7 +110,7 @@ initial begin
   // @(negedge clk);
   // write_data_1 = 0;
   // write_data_2 = 0;
-  repeat (230000) @(negedge clk);
+  repeat (260000) @(negedge clk);
   read_data_2 = 1;
   @(negedge clk);
   read_data_2 = 0;

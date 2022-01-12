@@ -61,24 +61,24 @@ R7
 R8
 vtb_uart_protocol
 R1
-R2
+!s110 1641998507
 !i10b 1
-!s100 Heh@CP:1[E6`?:0=SQ[Zh1
+!s100 AWnPEli<NFHXCXfBL@Fh72
 R3
-Ih:jZ?5gmUJ]89QzFN_GOo1
+IOaG=[hEG:icM6PQ_LP9=b1
 R4
 S1
 R0
-w1641790886
+w1641998500
 8D:/uart_vlsi/uart_vlsi/sim/tb/tb_uart_protocol.sv
 FD:/uart_vlsi/uart_vlsi/sim/tb/tb_uart_protocol.sv
-!i122 100
-L0 14 124
+!i122 106
+L0 3 124
 R5
 r1
 !s85 0
 31
-Z10 !s108 1641792800.000000
+!s108 1641998507.000000
 !s107 D:/uart_vlsi/uart_vlsi/sim/tb/tb_uart_protocol.sv|
 !s90 -reportprogress|300|-work|work|-sv|-stats=none|D:/uart_vlsi/uart_vlsi/sim/tb/tb_uart_protocol.sv|
 !i113 1
@@ -86,7 +86,7 @@ R7
 R8
 vtb_uart_protocol_2
 R1
-Z11 !s110 1641792802
+Z10 !s110 1641792802
 !i10b 1
 !s100 E3]UdUQGF2=ijEDM>05:I3
 R3
@@ -136,7 +136,7 @@ R7
 R8
 vtb_uart_transmitter
 R1
-R11
+R10
 !i10b 1
 !s100 JR1=P@W^8NFR8haSeZSH>2
 R3
@@ -161,7 +161,7 @@ R7
 R8
 vuart_fifo
 R1
-Z12 !s110 1641792799
+Z11 !s110 1641792799
 !i10b 1
 !s100 fRT>BM?a6XXk]^j7QeheC2
 R3
@@ -178,7 +178,7 @@ R5
 r1
 !s85 0
 31
-Z13 !s108 1641792799.000000
+Z12 !s108 1641792799.000000
 !s107 D:/uart_vlsi/uart_vlsi/hdl/uart_fifo.sv|
 !s90 -reportprogress|300|-work|work|-sv|-stats=none|D:/uart_vlsi/uart_vlsi/hdl/uart_fifo.sv|
 !i113 1
@@ -186,7 +186,7 @@ R7
 R8
 vuart_generator_clock
 R1
-R12
+R11
 !i10b 1
 !s100 ;_Y[JAGL_Q<IO@Q]R]jcz1
 R3
@@ -203,7 +203,7 @@ R5
 r1
 !s85 0
 31
-R13
+R12
 !s107 D:/uart_vlsi/uart_vlsi/hdl/uart_generator_clock.sv|
 !s90 -reportprogress|300|-work|work|-sv|-stats=none|D:/uart_vlsi/uart_vlsi/hdl/uart_generator_clock.sv|
 !i113 1
@@ -211,7 +211,7 @@ R7
 R8
 vuart_protocol
 R1
-R12
+R11
 !i10b 1
 !s100 dj2`[2ckAH>zMhfD5UK[?1
 R3
@@ -228,7 +228,7 @@ R5
 r1
 !s85 0
 31
-R13
+R12
 !s107 D:/uart_vlsi/uart_vlsi/hdl/uart_protocol.sv|
 !s90 -reportprogress|300|-work|work|-sv|-stats=none|D:/uart_vlsi/uart_vlsi/hdl/uart_protocol.sv|
 !i113 1
@@ -236,7 +236,7 @@ R7
 R8
 vuart_receiver
 R1
-Z14 !s110 1641792800
+Z13 !s110 1641792800
 !i10b 1
 !s100 A3bcPKlZzg1MX]GbJ^X;V1
 R3
@@ -253,7 +253,7 @@ R5
 r1
 !s85 0
 31
-R10
+Z14 !s108 1641792800.000000
 !s107 D:/uart_vlsi/uart_vlsi/hdl/uart_receiver.sv|
 !s90 -reportprogress|300|-work|work|-sv|-stats=none|D:/uart_vlsi/uart_vlsi/hdl/uart_receiver.sv|
 !i113 1
@@ -261,7 +261,7 @@ R7
 R8
 vuart_transmitter
 R1
-R14
+R13
 !i10b 1
 !s100 B28D>B5RLj>8mz<NjAzS]2
 R3
@@ -278,7 +278,7 @@ R5
 r1
 !s85 0
 31
-R10
+R14
 !s107 D:/uart_vlsi/uart_vlsi/hdl/uart_transmitter.sv|
 !s90 -reportprogress|300|-work|work|-sv|-stats=none|D:/uart_vlsi/uart_vlsi/hdl/uart_transmitter.sv|
 !i113 1
