@@ -138,6 +138,9 @@ initial begin
   bus_data_in = 8'b10110011;
   write_data = 1;
   @(negedge clk);
+  write_data = 0;
+  @(negedge clk);
+  write_data = 1;
   bus_data_in = 8'b01011100;
   @(negedge clk);
   write_data = 0;
@@ -153,15 +156,11 @@ initial begin
   end
   @(negedge clk);
   write_data = 0;
-  repeat (260000) @(negedge clk);
+  repeat (550000) @(negedge clk);
   read_data = 1;
   @(negedge clk);
   read_data = 0;
-  repeat (260000) @(negedge clk);
-  read_data = 1;
-  @(negedge clk);
-  read_data = 0;
-  repeat (10000) @(negedge clk);
+  repeat (50000) @(negedge clk);
   $finish;
 end
 
