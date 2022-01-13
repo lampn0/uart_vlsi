@@ -33,13 +33,6 @@ Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 
 Top level modules:
 	tb_uart_transmitter
 
-} {} {}} D:/uart_vlsi/uart_vlsi/hdl/uart_fifo.sv {1 {vlog -work work -sv -stats=none D:/uart_vlsi/uart_vlsi/hdl/uart_fifo.sv
-Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
--- Compiling module uart_fifo
-
-Top level modules:
-	uart_fifo
-
 } {} {}} D:/uart_vlsi/uart_vlsi/sim/tb_uart_fifo/tb_uart_fifo.sv {1 {vlog -work work -sv -stats=none D:/uart_vlsi/uart_vlsi/sim/tb_uart_fifo/tb_uart_fifo.sv
 Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
 -- Compiling module tb_uart_fifo
