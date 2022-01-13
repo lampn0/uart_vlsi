@@ -180,17 +180,17 @@ initial begin
   repeat (1000) @(negedge clk);
   bus_data_in = 8'b10101110;
   write_data = 1;
-  // repeat(7) begin
-  //   @(negedge clk);
-  //   bus_data_in = $random();
-  // end
+  repeat(7) begin
+    @(negedge clk);
+    bus_data_in = $random();
+  end
   @(negedge clk);
   write_data = 0;
-  repeat (30000) @(negedge clk);
+  repeat (260000) @(negedge clk);
   read_data = 1;
   @(negedge clk);
   read_data = 0;
-  repeat (30000) @(negedge clk);
+  repeat (260000) @(negedge clk);
   $finish;
 end
 
