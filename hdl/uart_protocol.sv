@@ -120,8 +120,6 @@ uart_fifo_transmitter(
 // -------------------------------------------------------------
 // Receiver
 // -------------------------------------------------------------
-
-
 uart_receiver #(
   .DATA_SIZE (DATA_SIZE))
 uart_receiver(
@@ -141,23 +139,21 @@ uart_fifo #(
   .DATA_SIZE (DATA_SIZE),
   .SIZE_FIFO (SIZE_FIFO))
 uart_fifo_receiver(
-  .clk     (clk         ),
-  .reset_n (reset_n     ),
-  .data_in (rx_data_out ),
-  .data_out(bus_data_out),
-  .write   (write_fifo_receiver     ),
-  .read    (read_data   ),
-  .full    (rx_full        ),
-  .empty   (rx_empty       )
+  .clk     (clk                 ),
+  .reset_n (reset_n             ),
+  .data_in (rx_data_out         ),
+  .data_out(bus_data_out        ),
+  .write   (write_fifo_receiver ),
+  .read    (read_data           ),
+  .full    (rx_full             ),
+  .empty   (rx_empty            )
   );
-
-
 
 always_ff @(posedge clk or negedge reset_n) begin : fsm 
   if (~reset_n) begin
     state <= IDLE;
   end
-  else state <= next_state;  
+  else state <= next_state;
 end
 
 always_comb begin : fsm_output

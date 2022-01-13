@@ -49,7 +49,7 @@ initial begin
   rx_start_n = 0;
   @(negedge clk);
   serial_data_in = 0;
-  repeat (4) begin
+  repeat (3) begin
     @(negedge clk);
     serial_data_in = 1;
     @(negedge clk);
@@ -57,7 +57,7 @@ initial begin
   end
   @(negedge clk);
   serial_data_in = 1;
-  repeat (2) @(negedge clk);
+  repeat (6) @(negedge clk);
   // repeat (15) begin
   //   @(negedge clk);
   //   serial_data_in = $random();
