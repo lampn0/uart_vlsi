@@ -9,10 +9,10 @@ z2
 cModel Technology
 Z0 dD:/workspace/lampn182628/kien_truc_may_tinh/project/riscv32i_pipeline/sim
 T_opt
-!s110 1642011424
-V@<K6mY`OcF;]On8Wj[@P22
-04 18 4 work tb_clock_generator fast 0
-=1-30d0421069d5-61df1b20-37c-479c
+!s110 1642015011
+V0NEh_U8e]oa>l[UW2EYN10
+04 16 4 work tb_uart_protocol fast 0
+=1-30d0421069d5-61df2923-2f8-3d30
 Z1 o-quiet -auto_acc_if_foreign -work work +acc
 Z2 tCvgOpt 0
 n@_opt
@@ -29,17 +29,17 @@ n@_opt1
 R3
 R0
 T_opt2
-!s110 1642013231
-VnezONJaHlOFWFT]3z10X10
+!s110 1642039327
+VW4ZfW<?ch19>O9[3zfS8=2
 04 8 4 work tb_tx_rx fast 0
-=1-30d0421069d5-61df222e-3a1-2ba8
+=6-30d0421069d5-61df881f-254-3bec
 R1
 R2
 n@_opt2
 R3
 vtb_clock_generator
 Z4 DXx6 sv_std 3 std 0 22 d=_JfHTnXCN[H5FjiaJJc0
-Z5 !s110 1642013223
+Z5 !s110 1642039320
 !i10b 1
 !s100 <@;05;B82]P2DCAjOXd0G1
 IbSR5kFAjKhQDcbjd_2ZOY1
@@ -55,7 +55,7 @@ Z9 OL;L;10.7c;67
 r1
 !s85 0
 31
-Z10 !s108 1642013223.000000
+Z10 !s108 1642039320.000000
 !s107 D:/workspace/lampn182628/VLSI/project/uart_vlsi/sim/tb_uart_clock_generator/tb_clock_generator.sv|
 !s90 -reportprogress|300|-work|work|-vopt|-sv|-stats=none|D:/workspace/lampn182628/VLSI/project/uart_vlsi/sim/tb_uart_clock_generator/tb_clock_generator.sv|
 !i113 0
@@ -63,25 +63,25 @@ Z11 o-work work -sv -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
 R2
 vtb_tx_rx
 R4
-Z12 !s110 1642013224
+Z12 !s110 1642039321
 !i10b 1
-!s100 FOaNQB1DU0[j[UNSDAF>R1
-Ii27;HP]5n6VQKX::i]LR;1
+!s100 kzodL[@j<B^z:h8njkYoC0
+I2PXmJJQ8eJP<VcDja@KeX2
 R6
 !s105 tb_tx_rx_sv_unit
 S1
 R7
-w1642012911
-8D:/workspace/lampn182628/VLSI/project/uart_vlsi/sim/tb/tb_tx_rx.sv
-FD:/workspace/lampn182628/VLSI/project/uart_vlsi/sim/tb/tb_tx_rx.sv
+w1642039314
+8D:/workspace/lampn182628/VLSI/project/uart_vlsi/sim/tb_tx_rx.sv
+FD:/workspace/lampn182628/VLSI/project/uart_vlsi/sim/tb_tx_rx.sv
 L0 14
 R9
 r1
 !s85 0
 31
-Z13 !s108 1642013224.000000
-!s107 D:/workspace/lampn182628/VLSI/project/uart_vlsi/sim/tb/tb_tx_rx.sv|
-!s90 -reportprogress|300|-work|work|-vopt|-sv|-stats=none|D:/workspace/lampn182628/VLSI/project/uart_vlsi/sim/tb/tb_tx_rx.sv|
+Z13 !s108 1642039321.000000
+!s107 D:/workspace/lampn182628/VLSI/project/uart_vlsi/sim/tb_tx_rx.sv|
+!s90 -reportprogress|300|-work|work|-vopt|-sv|-stats=none|D:/workspace/lampn182628/VLSI/project/uart_vlsi/sim/tb_tx_rx.sv|
 !i113 0
 R11
 R2
@@ -135,7 +135,7 @@ R11
 R2
 vtb_uart_receiver
 R4
-R5
+R12
 !i10b 1
 !s100 6;NPD93RGhAR>^5JZX8>70
 ImzE=B24;a^Ilma2aYFO4Y1
@@ -231,7 +231,7 @@ R11
 R2
 vuart_fifo
 R4
-R5
+!s110 1642038975
 !i10b 1
 !s100 gPQiX1O01@^;6DUmEPRTX0
 I7<maB8PPW`5fULYTU9nH63
@@ -247,7 +247,7 @@ R9
 r1
 !s85 0
 31
-R10
+!s108 1642038975.000000
 !s107 D:/workspace/lampn182628/VLSI/project/uart_vlsi/hdl/uart_fifo.sv|
 !s90 -reportprogress|300|-work|work|-vopt|-sv|-stats=none|D:/workspace/lampn182628/VLSI/project/uart_vlsi/hdl/uart_fifo.sv|
 !i113 0
@@ -345,5 +345,4 @@ r1
 31
 R10
 !s107 D:/workspace/lampn182628/VLSI/project/uart_vlsi/hdl/uart_transmitter.sv|
-!s90 -reportprogress|300|-work|work|-vopt|-sv|-stats=none|D:/workspace/lampn182628/VLSI/project/uart_vlsi/hdl/uart_transmitter.sv|
-!i11
+!s90 -reportprogress|300|-work|work|-vopt|-sv|-stats=none|D:/workspace/lampn182628/VLSI/project/uart_vlsi/hdl/uart

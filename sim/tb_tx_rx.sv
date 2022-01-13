@@ -50,45 +50,9 @@ logic                     overflow_error  ;
 logic                     rx_full         ;
 logic                     rx_empty        ;
 
-logic write_fifo_receiver;
-
-enum logic [1:0] {
-  IDLE      = 2'b01,
-  CHECK     = 2'b10
-} state, next_state;
-
 assign tx_start_n     = tx_empty;
 assign rx_start_n     = rx_full;
 assign serial_data_in = serial_data_out;
-
-always_ff @(posedge clk or negedge reset_n) begin : fsm 
-  if (~reset_n) begin
-    state <= IDLE;
-  end
-  else state <= next_state;
-end
-
-always_comb begin : fsm_output
-  case(state)
-    IDLE: begin
-      if (rx_done) begin
-        write_fifo_receiver = 1;
-        next_state = CHECK;
-      end
-      else begin
-        write_fifo_receiver = 0;
-        next_state = IDLE;
-      end
-    end
-    CHECK: begin
-      write_fifo_receiver = 0;
-      if (~rx_done) begin
-        next_state = IDLE;
-      end
-      else next_state = CHECK;
-    end
-  endcase
-end
 
 // -------------------------------------------------------------
 // Generator Clock
@@ -151,14 +115,14 @@ uart_fifo #(
   .DATA_SIZE (DATA_SIZE),
   .SIZE_FIFO (SIZE_FIFO))
 uart_fifo_receiver(
-  .clk     (clk                 ),
-  .reset_n (reset_n             ),
-  .data_in (rx_data_out         ),
-  .data_out(bus_data_out        ),
-  .write   (write_fifo_receiver ),
-  .read    (read_data           ),
-  .full    (rx_full             ),
-  .empty   (rx_empty            )
+  .clk     (clk         ),
+  .reset_n (reset_n     ),
+  .data_in (rx_data_out ),
+  .data_out(bus_data_out),
+  .write   (rx_done     ),
+  .read    (read_data   ),
+  .full    (rx_full     ),
+  .empty   (rx_empty    )
   );
 
 always #5 clk = ~clk;
@@ -182,7 +146,10 @@ initial begin
   write_data = 1;
   repeat(7) begin
     @(negedge clk);
+    write_data = 0;
+    @(negedge clk);
     bus_data_in = $random();
+    write_data = 1;
   end
   @(negedge clk);
   write_data = 0;
@@ -191,6 +158,10 @@ initial begin
   @(negedge clk);
   read_data = 0;
   repeat (260000) @(negedge clk);
+  read_data = 1;
+  @(negedge clk);
+  read_data = 0;
+  repeat (10000) @(negedge clk);
   $finish;
 end
 

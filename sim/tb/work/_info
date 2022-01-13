@@ -17,6 +17,7 @@ Z1 o-quiet -auto_acc_if_foreign -work work +acc
 Z2 tCvgOpt 0
 n@_opt
 Z3 OL;O;10.7c;67
+R0
 T_opt1
 !s110 1642011578
 VieSOzOKYbSKm1ElGnQg=T3
@@ -28,18 +29,17 @@ n@_opt1
 R3
 R0
 T_opt2
-!s110 1642013231
-VnezONJaHlOFWFT]3z10X10
+!s110 1642040084
+VH8D17V^VHIB``oik4jbeA2
 04 8 4 work tb_tx_rx fast 0
-=1-30d0421069d5-61df222e-3a1-2ba8
+=11-30d0421069d5-61df8b13-374-3bec
 R1
 R2
 n@_opt2
 R3
-R0
 vtb_clock_generator
 Z4 DXx6 sv_std 3 std 0 22 d=_JfHTnXCN[H5FjiaJJc0
-Z5 !s110 1642014432
+Z5 !s110 1642040080
 !i10b 1
 !s100 <@;05;B82]P2DCAjOXd0G1
 IbSR5kFAjKhQDcbjd_2ZOY1
@@ -55,7 +55,7 @@ Z9 OL;L;10.7c;67
 r1
 !s85 0
 31
-Z10 !s108 1642014432.000000
+Z10 !s108 1642040080.000000
 !s107 D:/workspace/lampn182628/VLSI/project/uart_vlsi/sim/tb_uart_clock_generator/tb_clock_generator.sv|
 !s90 -reportprogress|300|-work|work|-vopt|-sv|-stats=none|D:/workspace/lampn182628/VLSI/project/uart_vlsi/sim/tb_uart_clock_generator/tb_clock_generator.sv|
 !i113 0
@@ -65,23 +65,23 @@ vtb_tx_rx
 R4
 R5
 !i10b 1
-!s100 FOaNQB1DU0[j[UNSDAF>R1
-Ii27;HP]5n6VQKX::i]LR;1
+!s100 _N41cjM]T2O2ofdd?FWdD1
+IkzI3>V>47<4fDOTOKCI1H3
 R6
 !s105 tb_tx_rx_sv_unit
 S1
 R7
-w1642012911
-8D:/workspace/lampn182628/VLSI/project/uart_vlsi/sim/tb/tb_tx_rx.sv
-FD:/workspace/lampn182628/VLSI/project/uart_vlsi/sim/tb/tb_tx_rx.sv
+w1642039701
+8D:/workspace/lampn182628/VLSI/project/uart_vlsi/sim/tb_tx_rx.sv
+FD:/workspace/lampn182628/VLSI/project/uart_vlsi/sim/tb_tx_rx.sv
 L0 14
 R9
 r1
 !s85 0
 31
 R10
-!s107 D:/workspace/lampn182628/VLSI/project/uart_vlsi/sim/tb/tb_tx_rx.sv|
-!s90 -reportprogress|300|-work|work|-vopt|-sv|-stats=none|D:/workspace/lampn182628/VLSI/project/uart_vlsi/sim/tb/tb_tx_rx.sv|
+!s107 D:/workspace/lampn182628/VLSI/project/uart_vlsi/sim/tb_tx_rx.sv|
+!s90 -reportprogress|300|-work|work|-vopt|-sv|-stats=none|D:/workspace/lampn182628/VLSI/project/uart_vlsi/sim/tb_tx_rx.sv|
 !i113 0
 R11
 R2
@@ -233,13 +233,13 @@ vuart_fifo
 R4
 R5
 !i10b 1
-!s100 gPQiX1O01@^;6DUmEPRTX0
-I7<maB8PPW`5fULYTU9nH63
+!s100 f5RFWd8ioeY2<`2Ydao6O1
+Il0zfEMUYzD3z9He_4`29i1
 R6
 !s105 uart_fifo_sv_unit
 S1
 R7
-w1642012198
+w1642040076
 8D:/workspace/lampn182628/VLSI/project/uart_vlsi/hdl/uart_fifo.sv
 FD:/workspace/lampn182628/VLSI/project/uart_vlsi/hdl/uart_fifo.sv
 R12
