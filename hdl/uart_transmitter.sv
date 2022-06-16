@@ -25,13 +25,14 @@ module uart_transmitter #(
 // -------------------------------------------------------------
 // Signal Declaration
 // -------------------------------------------------------------
-logic [DATA_SIZE      + 1 : 0]  TX_shift_reg      ; // 
+// logic [DATA_SIZE      + 1 : 0]  TX_shift_reg      ; //
+logic [DATA_SIZE          : 0]  TX_shift_reg      ; // 
 logic [BIT_COUNT_SIZE - 1 : 0]  bit_count         ; // 
 logic                           bit_count_done    ; // 
 logic                           load_TX_shift_reg ; // 
 logic                           shift             ; // 
 logic                           clear             ; // 
-logic                           bit_parity        ; // 
+// logic                           bit_parity        ; // 
 
 // -------------------------------------------------------------
 // State Encoding
@@ -41,7 +42,7 @@ enum logic [1:0] {
   SENDING   = 2'b10
 } state, next_state;
 
-assign bit_parity = ^data_in;
+// assign bit_parity = ^data_in;
 assign serial_data_out = TX_shift_reg[0];
 assign tx_done = bit_count_done;
 
@@ -109,7 +110,7 @@ always_ff @(posedge clk or negedge reset_n) begin : proc_counter
 end
 
 always_comb begin : proc_count_done
-  bit_count_done = (bit_count == 4'd10);
+  bit_count_done = (bit_count == (DATA_SIZE + 1));
 end
 
 // -------------------------------------------------------------
@@ -117,13 +118,15 @@ end
 // -------------------------------------------------------------
 always_ff @(posedge clk or negedge reset_n) begin : proc_tx_shift_reg
   if(~reset_n) begin
-    TX_shift_reg <= {(DATA_SIZE+2){1'b1}};
+    // TX_shift_reg <= {(DATA_SIZE+2){1'b1}};
+    TX_shift_reg <= {(DATA_SIZE+1){1'b1}};
   end
   else if(load_TX_shift_reg) begin
-    TX_shift_reg <= {bit_parity,data_in,1'b0};
-  end
+    // TX_shift_reg <= {bit_parity,data_in,1'b0};
+    TX_shift_reg <= {data_in,1'b0};  end
   else if (shift) begin
-    TX_shift_reg <= {1'b1,TX_shift_reg[DATA_SIZE+1:1]};
+    // TX_shift_reg <= {1'b1,TX_shift_reg[DATA_SIZE+1:1]};
+    TX_shift_reg <= {1'b1,TX_shift_reg[DATA_SIZE:1]};
   end
   else begin
     TX_shift_reg <= TX_shift_reg;
